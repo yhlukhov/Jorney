@@ -1,1 +1,3 @@
-@import './reset.css'
+@import './Common/Css/reset.css';
+@import './Common/Css/init.css';
+@import './Assets/Fonts/fonts.css';

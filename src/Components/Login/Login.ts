@@ -5,7 +5,8 @@ import LoginPage from "./LoginPage";
 
 const mapStateToProps = (state:TState) => {
   return {
-
+    loggedIn: state.auth.loggedIn,
+    error: state.auth.error
   }
 }
 

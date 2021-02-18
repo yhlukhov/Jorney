@@ -11,7 +11,7 @@ const ChannelItem = ({channel}:PropsType) => {
   return(
     <ChannelArticle>
       <div>{channel.name}</div>
-      <div>{channel.userName}</div>
+      <div>{channel.author}</div>
       {/* <div>{channel.userEmail}</div> */}
       {/* <div>{channel.description}</div> */}
       <div>{channel.country.native}</div>

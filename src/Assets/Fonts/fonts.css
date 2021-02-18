@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Roboto";
+  src: local('Roboto'), url('./Roboto-Regular.ttf') format('truetype')
+};
+
+@font-face {
+  font-family: "Rurintania";
+  src: local('Rurintania'), url('./Rurintania.ttf') format('truetype')
+};

@@ -1,6 +1,3 @@
-import { CountryType } from "./CountryType";
-import { LanguageType } from "./LanguageType";
-
 export type EventType = {
   name: string
   organizer: string

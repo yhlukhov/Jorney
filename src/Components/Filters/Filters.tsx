@@ -4,7 +4,7 @@ import LanguageFilter from './LanugageFilter';
 
 const Filters: FunctionComponent = () => {
   return (
-    <div>
+    <div style={{border:"1px solid lightblue"}}>
       <CountryFilter />
       <LanguageFilter />
     </div>

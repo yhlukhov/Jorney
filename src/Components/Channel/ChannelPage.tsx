@@ -20,7 +20,7 @@ const ChannelPage: FC<TProps> = ({channel, getChannel, id}) => {
     <div>
       <div>{channel.name}</div>
       <div>{channel.id}</div>
-      <div>{channel.userName}</div>
+      <div>{channel.author}</div>
     </div>
   )
 }

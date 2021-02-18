@@ -5,7 +5,9 @@ import MyChannelPage from './MyChannelPage'
 
 const mapStateToProps = (state:TState)=>{
   return {
-
+    loggedIn: state.auth.loggedIn,
+    channel: state.auth.channel,
+    imgUrl: state.auth.imgUrl
   }
 }
 

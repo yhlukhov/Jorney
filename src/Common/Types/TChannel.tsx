@@ -1,15 +1,15 @@
-import { CountryType } from './CountryType';
-import { LanguageType } from './LanguageType';
+import { TCountry } from './TCountry';
+import { TLanguage } from './TLanguage';
 
 export type TChannel = {
   name: string
-  userName: string
-  userEmail: string
-  country: CountryType
-  language: LanguageType
-  description: string
+  author: string
+  email: string
+  country: TCountry
+  language: TLanguage
+  info: string
   image: string
-  userRole: string
+  role: string
   subscribe: boolean
   approved: boolean
   id: string
