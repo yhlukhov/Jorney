@@ -1,7 +1,8 @@
 import { FC } from "react"
 import { Field, Form } from "react-final-form"
-import { composeValidators, required, minLength } from "./validators"
+import { composeValidators, required, minLength } from "../../Common/validators"
 import css from './form.module.css'
+import { FieldErr } from '../../Common/StyledComponents/index'
 
 type TProps = {
   signIn: any
@@ -27,7 +28,7 @@ const LoginForm: FC<TProps> = ({ signIn }) => {
               <div className={css.field}>
                 <label>Email</label>
                 <input {...input} type="text" />
-                {meta.error && meta.touched && <span>{meta.error}</span>}
+                {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
               </div>
             )}
           </Field>
@@ -36,7 +37,7 @@ const LoginForm: FC<TProps> = ({ signIn }) => {
               <div className={css.field}>
                 <label>Password</label>
                 <input {...input} type="password" />
-                {meta.error && meta.touched && <span>{meta.error}</span>}
+                {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
               </div>
             )}
           </Field>

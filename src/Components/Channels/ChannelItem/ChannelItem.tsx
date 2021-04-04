@@ -1,4 +1,3 @@
-import { Redirect } from 'react-router'
 import styled from 'styled-components'
 import { TChannel } from '../../../Common/Types/TChannel'
 import { NavLink } from 'react-router-dom'
@@ -12,10 +11,10 @@ const ChannelItem = ({channel}:PropsType) => {
     <ChannelArticle>
       <div>{channel.name}</div>
       <div>{channel.author}</div>
-      {/* <div>{channel.userEmail}</div> */}
-      {/* <div>{channel.description}</div> */}
+      <div>{channel.email}</div>
+      <div>{channel.info}</div>
       <div>{channel.country.native}</div>
-      <div>{channel.language.native}</div>
+      <div>{channel.language[0].native}</div>
       <NavLink to={{ pathname: `/channel/${channel.id}`}}>Open Channel Page</NavLink>
     </ChannelArticle>
   )

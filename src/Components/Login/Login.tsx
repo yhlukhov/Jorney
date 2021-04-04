@@ -1,7 +1,10 @@
 import { FC } from "react"
+import { Redirect } from 'react-router'
+import { connect } from 'react-redux'
+import { signUp, signIn } from '../../Store/authReducer'
+import { TState } from "../../Store/store";
 import LoginForm from "./LoginForm"
 import RegisterForm from "./RegisterForm"
-import { Redirect } from 'react-router'
 
 type TProps = {
   signUp: any
@@ -10,7 +13,7 @@ type TProps = {
   error: any
 }
 
-const LoginPage: FC<TProps> = ({ signUp, signIn, loggedIn, error }) => {
+const Login: FC<TProps> = ({ signUp, signIn, loggedIn, error }) => {
   if(loggedIn) return <Redirect to="/mychannel" />
   return (
     <>
@@ -24,4 +27,17 @@ const LoginPage: FC<TProps> = ({ signUp, signIn, loggedIn, error }) => {
   )
 }
 
-export default LoginPage
+const mapStateToProps = (state:TState) => {
+  return {
+    loggedIn: state.auth.loggedIn,
+    error: state.auth.error
+  }
+}
+
+const ActionCreators = {
+  signUp,
+  signIn
+}
+
+export default connect(mapStateToProps, ActionCreators)(Login)
+

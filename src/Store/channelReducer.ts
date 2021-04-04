@@ -14,7 +14,7 @@ export const channelReducer = (state = initialState, action: TActions):TState =>
   switch (action.type) {
     case "SET_CHANNEL_DATA":
       return {
-        ...initialState,
+        ...state,
         channel: action.data.channel
       }
     default:

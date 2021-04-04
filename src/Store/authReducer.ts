@@ -4,7 +4,7 @@ import { ThunkAction } from "redux-thunk"
 import { TCountry } from "../Common/Types/TCountry"
 import { TLanguage } from "../Common/Types/TLanguage"
 import { TChannel } from "../Common/Types/TChannel"
-import { storage } from '../API/APIConfig'
+import { storage } from "../API/APIConfig"
 
 const initialState = {
   loggedIn: false,
@@ -15,31 +15,31 @@ const initialState = {
     message: "",
   },
 }
-
 type TState = typeof initialState
 type TActions = InferTActions<typeof actions>
 
+//* AUTH REDUCER
 export const authReducer = (state = initialState, action: TActions): TState => {
   switch (action.type) {
     case "SET_CHANNEL":
       return {
         ...state,
         //@ts-ignore
-        channel: action.data.channel,
-        loggedIn: true,
+        channel: action.data.channel
       }
 
     case "SET_IMG_URL":
       return {
         ...state,
         //@ts-ignore
-        imgUrl: action.data.imgUrl
+        imgUrl: action.data.imgUrl,
       }
 
-    case "SET_LOGOUT":
+    case "SET_LOGGED_IN":
       return {
         ...state,
-        loggedIn: false,
+        //@ts-ignore
+        loggedIn: action.data.status,
       }
 
     case "SET_ERROR":
@@ -54,56 +54,65 @@ export const authReducer = (state = initialState, action: TActions): TState => {
   }
 }
 
+//* ACTION CREATORS
+const setChannel = (channel: TChannel) => {
+  return {
+    type: "SET_CHANNEL",
+    data: { channel },
+  }
+}
+
+const setImgUrl = (imgUrl: string) => {
+  console.log('set image url: ', imgUrl)
+  return {
+    type: "SET_IMG_URL",
+    data: { imgUrl },
+  }
+}
+
+const setLoggedIn = (status: boolean) => {
+  return {
+    type: "SET_LOGGED_IN",
+    data: { status },
+  }
+}
+
+const setError = (code: string, message: string) => {
+  return {
+    type: "SET_ERROR",
+    data: {
+      code: code,
+      message: message,
+    },
+  }
+}
+
+//* ACTIONS
 const actions = {
-  setChannel: (channel: TChannel) => {
-    return {
-      type: "SET_CHANNEL",
-      data: {
-        channel,
-      },
-    }
-  },
+  setChannel,
+  setImgUrl,
+  setLoggedIn,
+  setError,
+}
 
-  setImgUrl: (imgUrl: string) => {
-    return {
-      type: "SET_IMG_URL",
-      data: {
-        imgUrl
-      }
-    }
-  },
-
-  setLogout: () => {
-    return {
-      type: "SET_LOGOUT",
-      data: {}
-    }
-  },
-
-  setError: (code: string, message: string) => {
-    return {
-      type: "SET_ERROR",
-      data: {
-        code: code,
-        message: message,
-      },
-    }
-  },
+//* THUNK CREATORS
+export const getChannelImgUrl = (image: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+  const url = await storage.child(image).getDownloadURL()
+  dispatch(setImgUrl(url))
 }
 
 export const signIn = (email: string, password: string): ThunkAction<void, TState, unknown, TActions> => (dispatch) => {
+  console.log(email, password)
   authAPI
     .signIn(email, password)
     .then((userCredentials) => {
-      const { email, uid, emailVerified } = { ...userCredentials.user }
+      const { uid } = { ...userCredentials.user }
       authAPI.getChannelSnapshot(uid).onSnapshot((snap) => {
         let channel = { ...snap.data(), id: snap.id } as TChannel
         localStorage.setItem("channel", JSON.stringify(channel))
-        dispatch(actions.setChannel(channel))
-        storage.child(channel.image).getDownloadURL().then(url => {
-          dispatch(actions.setImgUrl(url))
-          console.log(url)
-        })
+        dispatch(setChannel(channel))
+        dispatch(setLoggedIn(true))
+        getChannelImgUrl(channel.image) //! do i need to use dispatch(getChannelImgUrl(channel.image)) instead ???
       })
     })
     .catch(console.log)
@@ -117,35 +126,45 @@ export const signUp = (
   info: string,
   images: FileList,
   country: TCountry,
-  language: TLanguage
+  language: Array<TLanguage>
 ): ThunkAction<void, TState, unknown, TActions> => async (dispatch) => {
   const image = images[0]
   authAPI
     .signUp(email, password)
     .then((userCredentials) => {
-      const { email, uid, emailVerified } = { ...userCredentials.user }
+      const { email, uid } = { ...userCredentials.user }
       authAPI
-        .registerChannel(uid || '', name, email || '', author, info, image, country, language)
+        .registerChannel(uid || "", name, email || "", author, info, image, country, language)
         .then(() => {
           authAPI.getChannelSnapshot(uid).onSnapshot((snap) => {
             if (snap.exists) {
               let channel = snap.data() as TChannel
               channel.id = snap.id
+              dispatch(setChannel(channel))
+              getChannelImgUrl(channel.image)
               localStorage.setItem("channel", JSON.stringify(channel))
-              dispatch(actions.setChannel(channel))
-              storage.child(channel.image).getDownloadURL().then(url => dispatch(actions.setImgUrl(url)))
             }
           })
         })
         .catch(console.log)
     })
     .catch((err) => {
-      dispatch(actions.setError(err.code, err.message))
+      dispatch(setError(err.code, err.message))
     })
 }
 
 export const signOut = (): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
-  let res = await authAPI.signOut()
-  dispatch(actions.setLogout())
+  await authAPI.signOut()
+  dispatch(setLoggedIn(false))
   localStorage.removeItem("channel")
+}
+
+export const getLocalstorageChannel = (): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+  const channelLS = localStorage.getItem("channel")
+  if (channelLS) {
+    const channel = JSON.parse(channelLS) as TChannel
+    dispatch(setChannel(channel))
+    getChannelImgUrl(channel.image)
+    dispatch(setLoggedIn(true))
+  }
 }

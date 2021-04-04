@@ -2,7 +2,6 @@ import firebase from "firebase/app"
 import { TCountry } from "../Common/Types/TCountry"
 import { TLanguage } from "../Common/Types/TLanguage"
 import { auth, db, storage } from './APIConfig'
-import { TChannel } from '../Common/Types/TChannel'
 
 export const authAPI = {
   signUp: (email: string, password: string): Promise<firebase.auth.UserCredential> => {
@@ -17,9 +16,9 @@ export const authAPI = {
     info: string,
     image: File,
     country: TCountry,
-    language: TLanguage
+    language: Array<TLanguage>
   ): Promise<void> => {
-    const imageSnap = await storage.child(`${name}/${image.name}`).put(image)
+    await storage.child(`${name}/${image.name}`).put(image)
     return db.collection("channels").doc(id).set({
       name,
       email,
@@ -36,8 +35,11 @@ export const authAPI = {
 
   signIn: (email: string, password: string): Promise<firebase.auth.UserCredential> => auth.signInWithEmailAndPassword(email, password),
 
-  signOut: (): Promise<void> => auth.signOut(),
+  signOut: (): Promise<void> => {
+    localStorage.removeItem("channel")
+    return auth.signOut()
+  },
 
-  getChannelSnapshot: (id: string | undefined): firebase.firestore.DocumentReference<firebase.firestore.DocumentData> =>
-    db.collection("channels").doc(id),
+  getChannelSnapshot: (id: string | undefined): firebase.firestore.DocumentReference<firebase.firestore.DocumentData> => db.collection("channels").doc(id),
+
 }

@@ -16,7 +16,7 @@ export default function channelsReducer (state=initialState, action:TActions):TS
   switch(action.type) {
     case 'SET_CHANNELS':
       return {
-        ...initialState,
+        ...state,
         channelsList: action.data.channels
       }
     default: return state

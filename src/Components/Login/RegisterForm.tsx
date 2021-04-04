@@ -1,23 +1,24 @@
-import { Form, Field } from "react-final-form"
 import { FC, useState, InputHTMLAttributes } from "react"
-import { composeValidators, required, minLength } from "./validators"
-import { ReqStar } from "../../Common/StyledComponents"
-import eyeOpen from "../../Assets/Images/eye_open.png"
-import eyeClose from "../../Assets/Images/eye_close.png"
-import { EyeIco, FieldErr } from '../../Common/StyledComponents/index'
-import css from "./form.module.css"
+import { Form, Field } from "react-final-form"
+import {useHistory} from 'react-router-dom'
 import InputLabel from "@material-ui/core/InputLabel"
 import Select from "@material-ui/core/Select"
 import MenuItem from "@material-ui/core/MenuItem"
 import FormControl from "@material-ui/core/FormControl"
+import Checkbox from "@material-ui/core/Checkbox"
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
-import { countries } from '../../Common/Data/Countries'
-import { languages } from '../../Common/Data/Languages'
-import { TCountry } from '../../Common/Types/TCountry'
-import { TLanguage } from '../../Common/Types/TLanguage'
+import { composeValidators, required, minLength, maxImgSize } from "../../Common/validators"
+import eyeOpen from "../../Assets/Images/eye_open.png"
+import eyeClose from "../../Assets/Images/eye_close.png"
+import { EyeIco, FieldErr } from "../../Common/StyledComponents/index"
+import css from "./form.module.css"
+import { countries, international } from '../../Common/Data/Countries'
+import { languages } from "../../Common/Data/Languages"
+import { TCountry } from "../../Common/Types/TCountry"
+import { TLanguage } from "../../Common/Types/TLanguage"
 
 type TProps = {
-  signUp:any
+  signUp: any
 }
 export type TSignUp = {
   name: string
@@ -27,30 +28,18 @@ export type TSignUp = {
   info: string
   images: FileList
   country: TCountry
-  language: TLanguage
+  language: Array<TLanguage>
 }
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface IFile extends InputHTMLAttributes<HTMLInputElement> {
   name: string
 }
-const FileField = ({ name, ...props }: Props) => (
-  <Field<FileList> name={name} validate={composeValidators(required)}>
-    {({ input: { value, onChange, ...input } }) => (
-      <input
-        {...input}
-        type="file"
-        accept="image/*"
-        onChange={({ target }) => onChange(target.files)} // instead of the default target.value
-        {...props}
-      />
-    )}
-  </Field>
-)
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 200,
+      maxWidth: 400 
     },
     countryFirst: {
       position: "relative",
@@ -60,11 +49,12 @@ const useStyles = makeStyles((theme: Theme) =>
         width: 'fit-content',
         top: "-5px",
         left: "50px",
+        color: 'red',
         fontSize: 'small',
         opacity: '0',
         transition: '0.2s'
       },
-      '&:hover:before': {
+      '&:hover:before': { 
         visibility: 'visible',
         top: "-17px",
         left: "50px",
@@ -74,14 +64,29 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 )
+const FileField = ({ name }: IFile) => (
+  <Field<FileList> name={name} validate={composeValidators(required, maxImgSize(2000000))}>
+    {({ input: { value, onChange, ...input }, meta }) => (
+      <div>
+        <input
+          {...input}
+          type="file"
+          accept="image/*"
+          onChange={({ target }) => onChange(target.files)} // instead of the default target.value
+        />
+        {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
+      </div>
+    )}
+  </Field>
+)
 
 const RegisterForm: FC<TProps> = ({ signUp }) => {
   const [pwType, setPwType] = useState("password")
   const switchPwType = () => setPwType(pwType === "text" ? "password" : "text")
   const classes = useStyles()
-
+  const historyHook = useHistory()
   const onSignUp = (values: TSignUp) => {
-    const { name, email, password, author, info, images, country, language } = {...values}
+    const { name, email, password, author, info, images, country, language } = { ...values }
     signUp(name, email, password, author, info, images, country, language)
   }
 
@@ -95,7 +100,7 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
               return (
                 <div className={css.field}>
                   <label>
-                    Channel Name<ReqStar>*</ReqStar>
+                    Channel Name
                   </label>
                   <input {...input} type="text" />
                   {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
@@ -107,7 +112,7 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>
-                  Email<ReqStar>*</ReqStar>
+                  Email
                 </label>
                 <input {...input} type="text" />
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
@@ -118,7 +123,7 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>
-                  Password<ReqStar>*</ReqStar>
+                  Password
                 </label>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <input {...input} type={pwType} />
@@ -132,7 +137,7 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>
-                  Channel Author<ReqStar>*</ReqStar>
+                  Channel Author
                 </label>
                 <input {...input} type="text" />
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
@@ -143,7 +148,7 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>
-                  Channel Information<ReqStar>*</ReqStar>
+                  Channel Information
                 </label>
                 <textarea {...input}></textarea>
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
@@ -155,9 +160,14 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
             {({ input, meta }) => (
               <FormControl variant="filled" className={classes.formControl}>
                 <InputLabel>
-                  Select Country<ReqStar>*</ReqStar>
+                  Select Country
                 </InputLabel>
-                <Select {...input} value={values.country || ""}>
+                <Select {...input}
+                >
+                  {/* @ts-ignore */}
+                  <MenuItem value={international}>
+                    <span style={{fontWeight:"bold"}}>{international.name}</span>
+                  </MenuItem>
                   {countries.map((country) => (
                     // @ts-ignore
                     <MenuItem key={country.code} value={country}>
@@ -173,33 +183,47 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
 
           <Field name="language" validate={composeValidators(required)}>
             {({ input, meta }) => (
-              <FormControl variant="filled" className={classes.formControl} disabled={!values.country}>
-                <InputLabel>Select language<ReqStar>*</ReqStar></InputLabel>
-                <Select className={values.country ? undefined : classes.countryFirst}
+              <FormControl variant="filled" required disabled={!values.country} className={`${classes.formControl} ${!values.country && classes.countryFirst}`}>
+                <InputLabel>
+                  Select languages
+                </InputLabel>
+                <Select
                   {...input}
-                  value={values.language || ''}
+                  value={values.language || ([] as Array<TLanguage>)}
+                  renderValue={(selected) =>
+                    (selected as Array<TLanguage>).reduce((stack, curr) => {
+                      return stack + ` ${curr.native}, `
+                    }, "")
+                  }
+                  multiple
                 >
-                  {values.country?.languages.map((lan) => {
-                    const lang = languages.find(language => language.code === lan )
+                  {values.country?.languages.map((langCode) => {
+                    const lang = languages.find((language) => language.code === langCode)
                     return (
-                    //@ts-ignore
-                    <MenuItem key={lang?.code} value={lang}>
-                      {lang?.name}
-                      {lang?.name !== lang?.native && <span style={{ color: "grey", fontSize: "small" }}>({lang?.native})</span>}
-                    </MenuItem>
-                  )})}
-                  {languages.map((lang) => (
-                    //@ts-ignore
-                    <MenuItem key={lang.code} value={lang}>
-                      {lang.name}
-                      {lang.name !== lang.native && <span style={{ color: "grey", fontSize: "small" }}>({lang.native})</span>}
-                    </MenuItem>
-                  ))}
+                      //@ts-ignore
+                      <MenuItem key={lang?.code} value={lang || {}}>
+                        <Checkbox checked={values.language ? (lang ? values.language.indexOf(lang) > -1 : false) : false} />
+                        {lang?.name}
+                        {lang?.name !== lang?.native && <span style={{ color: "grey", fontSize: "small" }}>({lang?.native})</span>}
+                      </MenuItem>
+                    )
+                  })}
+                  {languages
+                    .filter((lang) => (values.country && values.country.languages.indexOf(lang.code) === -1)) 
+                    .map((lang) => (
+                      //@ts-ignore
+                      <MenuItem key={lang.code} value={lang}>
+                        <Checkbox checked={values.language ? (lang ? values.language.indexOf(lang) > -1 : false) : false} />
+                        {lang.name}
+                        {lang.name !== lang.native && <span style={{ color: "grey", fontSize: "small" }}>({lang.native})</span>}
+                      </MenuItem>
+                    ))}
                 </Select>
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
               </FormControl>
             )}
           </Field>
+
           <FileField name="images" />
           <button type="submit">Sign Up</button>
         </form>

@@ -1,9 +1,5 @@
 import styled from "styled-components"
 
-export const ReqStar = styled.span`
-  color:red
-`
-
 export const FieldErr = styled.span`
   color: red;
   font-size: small

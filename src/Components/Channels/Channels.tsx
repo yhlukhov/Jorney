@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getChannels } from '../../Store/channelsReducer'
+import { getChannels } from '../../Store/channelListReducer'
 import ChannelsList from './ChannelsList'
 import { TState } from '../../Store/store'
 

@@ -1,31 +1,29 @@
-import { FunctionComponent } from "react";
+import { FC } from 'react'
 
 import Event from '../Events/Event/Event';
-import { EventType } from '../../Common/Types/EventType'
+import { TEvent } from '../../Common/Types/TEvent'
+import styled from 'styled-components';
 
-
-const eventIurii:EventType = {
-  name: 'Event111',
-  organizer: 'Iurii',
-  startDate: new Date(),
-  duration: '2h',
-  description: 'description',
-  language: 'en',
-  link: 'link',
-  image: 'img',
-  channelId: '2384774',
-  bookmark: false,
-  approved: true,
-  id: '1',
+type TProps = {
+  events:Array<TEvent>
 }
 
-const Events: FunctionComponent = () => {
+const Events: FC<TProps> = ({events}) => {
   return (
-    <div style={{border:"1px solid lightgreen"}}>
-      <div>Events</div>
-      <Event {...eventIurii} />
-    </div>
+    <EventsList>
+      {/* {events.filter(e => countryFilter.indexOf(e.country) > -1 ).map(e => <Event event={e} key={e.id}></Event>)} */}
+      {events.map(event=><Event event={event} key={event.id} />)}
+    </EventsList>
   )
 }
 
 export default Events
+
+
+//Styled Components
+
+const EventsList = styled.div`
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+`

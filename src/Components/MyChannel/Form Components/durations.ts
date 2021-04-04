@@ -1,0 +1,1 @@
+export const durations = ["15min", "30min", "1hr", "2hrs", "3hrs", "5hrs", "8hrs", "all day"]

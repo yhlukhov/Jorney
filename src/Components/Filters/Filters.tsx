@@ -1,8 +1,12 @@
-import { FunctionComponent } from "react";
+import { FC } from 'react'
+import { TState } from '../../Store/store';
 import CountryFilter from "./CountryFilter";
 import LanguageFilter from './LanugageFilter';
+import { connect } from 'react-redux'
 
-const Filters: FunctionComponent = () => {
+type TProps = {}
+
+const Filters: FC<TProps> = () => {
   return (
     <div style={{border:"1px solid lightblue"}}>
       <CountryFilter />

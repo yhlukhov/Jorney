@@ -1,13 +1,15 @@
-export type EventType = {
+export type TEvent = {
   name: string
-  organizer: string
-  startDate: Date
+  author: string
+  datetime: Date
   duration: string
-  description: string
+  details: string
   language: string
+  country: string
   link: string
   image: string
   channelId: string
+  channelName: string
   bookmark: boolean
   approved: boolean
   id: string
