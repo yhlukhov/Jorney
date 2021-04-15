@@ -9,7 +9,7 @@ export const channelsAPI = {
     const channels: Array<TChannel> = []
     let snapshot = await db.collection(CHANNELS).get()
     snapshot.forEach((res) => {
-      channels.push({ ...(res.data() as TChannel), id: res.id })
+      channels.push({ ...res.data(), id: res.id } as TChannel)
     })
     return channels
   },

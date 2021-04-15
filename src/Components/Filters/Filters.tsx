@@ -1,18 +1,25 @@
-import { FC } from 'react'
-import { TState } from '../../Store/store';
-import CountryFilter from "./CountryFilter";
-import LanguageFilter from './LanugageFilter';
-import { connect } from 'react-redux'
+import { FC } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import { TState } from "../../Store/store"
+import CountryFilter from "./CountryFilter"
+import LanguageFilter from "./LanugageFilter"
 
 type TProps = {}
 
 const Filters: FC<TProps> = () => {
   return (
-    <div style={{border:"1px solid lightblue"}}>
+    <FiltersDiv>
       <CountryFilter />
       <LanguageFilter />
-    </div>
+    </FiltersDiv>
   )
 }
 
 export default Filters
+
+const FiltersDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`

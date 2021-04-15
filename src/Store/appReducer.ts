@@ -1,12 +1,14 @@
 import { ThunkAction } from 'redux-thunk'
 import { InferTActions } from './store'
+import { TCountry } from '../Common/Types/TCountry'
+import { TLanguage } from '../Common/Types/TLanguage'
 
 const SET_COUNTRY_FILTER = 'SET_COUNTRY_FILTER'
 const SET_LANGUAGE_FILTER = 'SET_LANGUAGE_FILTER'
 
 const initialState = {
-  countryFilter: [] as Array<string>,
-  languageFilter: [] as Array<string>
+  countryFilter: null as null|Array<TCountry>,
+  languageFilter: null as null|Array<TLanguage>
 }
 
 type TState = typeof initialState
@@ -32,7 +34,8 @@ export const appReducer = (state = initialState, action:TActions) => {
 }
 
 //* ACTION CREATORS
-export const setCountryFilter = (countryList:Array<string>) => {
+export const setCountryFilter = (countryList:Array<TCountry>) => {
+  localStorage.setItem('countryFilter', JSON.stringify(countryList))
   return {
     type: SET_COUNTRY_FILTER,
     data: {
@@ -42,6 +45,7 @@ export const setCountryFilter = (countryList:Array<string>) => {
 }
 
 export const setLanguageFilter = (languageList:Array<string>) => {
+  localStorage.setItem('languageFilter', JSON.stringify(languageList))
   return {
     type: SET_LANGUAGE_FILTER,
     data: {
@@ -59,10 +63,10 @@ const actions = {
 //* THUNK CREATORS
 export const getCountryFilter = (): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
   let countryList = localStorage.getItem('countryFilter')
-  dispatch(setCountryFilter(countryList ? JSON.parse(countryList) : [] as Array<string>))
+  dispatch(setCountryFilter(countryList ? JSON.parse(countryList) as Array<TCountry> : [] as Array<TCountry>))
 }
 
 export const getLanguageFilter = (): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
   let languageList = localStorage.getItem('languageFilter')
-  dispatch(setLanguageFilter(languageList ? JSON.parse(languageList) : [] as Array<string>))
+  dispatch(setLanguageFilter(languageList ? JSON.parse(languageList) : [] as Array<TLanguage>))
 }

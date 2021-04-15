@@ -1,28 +1,53 @@
-import { FC } from 'react'
-
+import { FC, useEffect } from 'react'
+import { connect } from 'react-redux';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import styled from 'styled-components';
 import Event from '../Events/Event/Event';
 import { TEvent } from '../../Common/Types/TEvent'
-import styled from 'styled-components';
+import { TState } from '../../Store/store'
+import { loadEvents } from '../../Store/eventListReducer'
 
 type TProps = {
-  events:Array<TEvent>
+  events:Array<TEvent>,
+  countries: string[],
+  languages: string[],
+  loadEvents:any
 }
 
-const Events: FC<TProps> = ({events}) => {
+const Events: FC<TProps> = ({events, countries, languages, loadEvents}) => {
+  useEffect(()=>{
+    AOS.init({
+      duration : 800
+    })
+  }, [])
+  useEffect(()=>{
+    countries && languages && loadEvents(countries, languages)
+  },[countries, languages])
+
+  if (!events.length) return <div style={{fontSize:"40px"}}>Loading...</div>
+
   return (
-    <EventsList>
-      {/* {events.filter(e => countryFilter.indexOf(e.country) > -1 ).map(e => <Event event={e} key={e.id}></Event>)} */}
+    <EventsList data-aos="fade-up" >
       {events.map(event=><Event event={event} key={event.id} />)}
     </EventsList>
   )
 }
 
-export default Events
+const mapStateToProps = (state:TState) => {
+  return {
+    events: state.events.events,
+    countries: state.app.countryFilter,
+    languages:state.app.languageFilter
+  }
+}
+
+export default connect(mapStateToProps, {loadEvents})(Events)
 
 
 //Styled Components
 
-const EventsList = styled.div`
+export const EventsList = styled.div`
   display:flex;
   flex-wrap:wrap;
   justify-content:center;

@@ -13,7 +13,7 @@ type TProps = {
   getLocalstorageChannel:any
 }
 
-function App({loggedIn, getLocalstorageChannel}:TProps) {
+function App({ loggedIn, getLocalstorageChannel }:TProps) {
   useEffect(()=>{
     getLocalstorageChannel()
   }, [])
@@ -42,4 +42,5 @@ const AppSection = styled.section`
   background-image: url(${ekam});
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
 `

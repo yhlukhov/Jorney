@@ -6,7 +6,7 @@ export type TChannel = {
   author: string
   email: string
   country: TCountry
-  language: Array<TLanguage>
+  languages: Array<TLanguage>
   info: string
   image: string
   role: string

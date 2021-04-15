@@ -5,6 +5,7 @@ import { TCountry } from "../Common/Types/TCountry"
 import { TLanguage } from "../Common/Types/TLanguage"
 import { TChannel } from "../Common/Types/TChannel"
 import { storage } from "../API/APIConfig"
+import history from '../Common/Utils/history'
 
 const initialState = {
   loggedIn: false,
@@ -63,7 +64,6 @@ const setChannel = (channel: TChannel) => {
 }
 
 const setImgUrl = (imgUrl: string) => {
-  console.log('set image url: ', imgUrl)
   return {
     type: "SET_IMG_URL",
     data: { imgUrl },
@@ -96,13 +96,8 @@ const actions = {
 }
 
 //* THUNK CREATORS
-export const getChannelImgUrl = (image: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
-  const url = await storage.child(image).getDownloadURL()
-  dispatch(setImgUrl(url))
-}
 
 export const signIn = (email: string, password: string): ThunkAction<void, TState, unknown, TActions> => (dispatch) => {
-  console.log(email, password)
   authAPI
     .signIn(email, password)
     .then((userCredentials) => {
@@ -112,7 +107,7 @@ export const signIn = (email: string, password: string): ThunkAction<void, TStat
         localStorage.setItem("channel", JSON.stringify(channel))
         dispatch(setChannel(channel))
         dispatch(setLoggedIn(true))
-        getChannelImgUrl(channel.image) //! do i need to use dispatch(getChannelImgUrl(channel.image)) instead ???
+        dispatch(getChannelImgUrl(channel.image)) //! do i need to use dispatch(getChannelImgUrl(channel.image)) instead ???
       })
     })
     .catch(console.log)
@@ -138,10 +133,10 @@ export const signUp = (
         .then(() => {
           authAPI.getChannelSnapshot(uid).onSnapshot((snap) => {
             if (snap.exists) {
-              let channel = snap.data() as TChannel
-              channel.id = snap.id
+              const channel = {...snap.data(), id:snap.id} as TChannel
               dispatch(setChannel(channel))
-              getChannelImgUrl(channel.image)
+              dispatch(getChannelImgUrl(channel.image))
+              dispatch(setLoggedIn(true))
               localStorage.setItem("channel", JSON.stringify(channel))
             }
           })
@@ -157,6 +152,11 @@ export const signOut = (): ThunkAction<Promise<void>, TState, unknown, TActions>
   await authAPI.signOut()
   dispatch(setLoggedIn(false))
   localStorage.removeItem("channel")
+}
+
+export const getChannelImgUrl = (image: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+  const url = await storage.child(image).getDownloadURL()
+  dispatch(setImgUrl(url))
 }
 
 export const getLocalstorageChannel = (): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {

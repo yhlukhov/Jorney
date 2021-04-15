@@ -2,6 +2,7 @@ import firebase from "firebase/app"
 import { TCountry } from "../Common/Types/TCountry"
 import { TLanguage } from "../Common/Types/TLanguage"
 import { auth, db, storage } from './APIConfig'
+import { storageAPI } from './storageAPI'
 
 export const authAPI = {
   signUp: (email: string, password: string): Promise<firebase.auth.UserCredential> => {
@@ -16,9 +17,9 @@ export const authAPI = {
     info: string,
     image: File,
     country: TCountry,
-    language: Array<TLanguage>
+    languages: Array<TLanguage>
   ): Promise<void> => {
-    await storage.child(`${name}/${image.name}`).put(image)
+    await storageAPI.uploadFile(`${name}/${image.name}`, image)
     return db.collection("channels").doc(id).set({
       name,
       email,
@@ -26,7 +27,7 @@ export const authAPI = {
       info,
       image:`${name}/${image.name}`,
       country,
-      language,
+      languages,
       role: "user",
       approved: false,
       subscribe: true,

@@ -14,7 +14,7 @@ const ChannelItem = ({channel}:PropsType) => {
       <div>{channel.email}</div>
       <div>{channel.info}</div>
       <div>{channel.country.native}</div>
-      <div>{channel.language[0].native}</div>
+      <div>{channel.languages[0].native}</div>
       <NavLink to={{ pathname: `/channel/${channel.id}`}}>Open Channel Page</NavLink>
     </ChannelArticle>
   )

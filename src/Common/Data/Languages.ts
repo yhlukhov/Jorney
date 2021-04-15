@@ -1,5 +1,6 @@
+import { TLanguage } from '../Types/TLanguage'
 // List of languages for export:
-export const languages: Array<{code:string, name:string, native:string}> = [
+export const languages: Array<TLanguage> = [
   {
     "code": "af",
     "name": "Afrikaans",
