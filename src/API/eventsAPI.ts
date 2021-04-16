@@ -13,11 +13,14 @@ export const eventsAPI = {
       return db.collection("events").where("country", "in", countries).where("approved", "==", true).where("datetime", ">=", now).get()
   },
 
-  loadChannelEvents: async (id: string) => {
+  loadChannelEvents: (id: string) => {
     return db.collection("events").where("channelId", "==", id).get()
   },
-  createEvent: async (eventData: TEvent) => {
-    return db.collection("events").add(eventData)
+  createEvent: async (event: TEvent) => {
+    return await db.collection("events").add(event)
+  },
+  editEvent: async (event:TEvent) => {
+    return await db.collection("events").doc(event.id).update(event)
   },
   deleteEvent: async (id: string) => {
     return db.collection("events").doc(id).delete()

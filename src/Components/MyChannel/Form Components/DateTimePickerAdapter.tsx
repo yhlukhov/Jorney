@@ -1,11 +1,14 @@
 import { IconButton, InputAdornment } from "@material-ui/core"
 import { DateTimePicker } from "@material-ui/pickers"
-import { useState } from "react"
+import { useState, useEffect } from 'react'
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined'
+import { TState } from "../../../Store/store"
+import { connect } from "react-redux"
 
   //@ts-ignore
   export const DateTimePickerAdapter = ({ input: { onChange }, meta, ...rest }) => {
-    const [date, setDate] = useState<Date|null>(null)
+    const {initialtime} = rest
+    const [date, setDate] = useState<Date|null>(initialtime)
     return (
     <DateTimePicker
       {...rest}
@@ -36,3 +39,11 @@ import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined'
       }}
     />
   )}
+
+  const mapStateToProps = (state:TState) => {
+    return {
+      initialtime: state.myChannel.eventToEdit ? state.myChannel.eventToEdit.datetime : null
+    }
+  }
+
+  export default connect(mapStateToProps)(DateTimePickerAdapter)

@@ -1,11 +1,9 @@
-import { TLanguage } from '../../../Common/Types/TLanguage'
-
-export type TValues = {
+export type TEventValues = {
   name: string
   author: string
   datetime: string
   duration: string
-  languages: Array<TLanguage>
+  languages: Array<string>
   link: string
   details: string
   image: FileList | null

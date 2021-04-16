@@ -1,7 +1,7 @@
 import { FC, useState } from "react"
 import { Field, Form } from "react-final-form"
 import styled from "styled-components"
-import { required} from '../../Common/validators'
+import { required } from '../../Common/validators'
 import { TChannel } from "../../Common/Types/TChannel"
 import InputLabel from "@material-ui/core/InputLabel"
 import FormControl from "@material-ui/core/FormControl"
@@ -9,51 +9,54 @@ import { Button, MenuItem, Select, TextField, Checkbox } from "@material-ui/core
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import SaveIcon from "@material-ui/icons/Save"
-import DateTimePickerAdapter from "./Form Components/DateTimePickerAdapter"
+import  DateTimePickerAdapter  from "./Form Components/DateTimePickerAdapter"
 import { durations } from "./Form Components/durations"
 import { TEventValues } from "./Form Components/TValues"
-import { createEvent } from "../../Store/myChannelReducer"
+import { editEvent, setEventToEdit } from '../../Store/myChannelReducer'
 import { getChannelEvents } from "../../Store/myChannelReducer"
 import { connect } from "react-redux"
+import { TEvent } from "../../Common/Types/TEvent"
+import { TState } from "../../Store/store"
 
 type TProps = {
-  createEvent: any
+  editEvent: any
+  event: TEvent|null
   channel: TChannel | undefined
   setOpenModal: any
+  setEventToEdit: any
   imageUrl: string | undefined
   getChannelEvents: any
 }
 
-const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, imageUrl, getChannelEvents }) => {
+const EditEventForm: FC<TProps> = ({ editEvent, event, channel, setOpenModal, setEventToEdit, imageUrl, getChannelEvents }) => {
+  const [duration, setDuration] = useState(event?.duration) 
   const onCreateEvent = async (values: TEventValues) => {
     const { name, author, datetime, duration, languages, link, details } = { ...values }
-    const event = {
+    const eventEdited = {
       name,
       author,
       datetime: new Date(datetime),
       duration,
       details: details || "",
-      languages: languages.map(language => channel?.languages.find(lang => lang.native == language)),
-      country: channel?.country,
+      languages: languages.map(lang => channel?.languages.find(language=>language.native == lang)),
       link,
-      image: channel?.image,
-      channelId: channel?.id,
-      channelName: channel?.name,
-      bookmark: false,
-      approved: true
+      id:event?.id
     }
-    await createEvent(event)
+    await editEvent(eventEdited)
     setOpenModal(false)
+    setEventToEdit(null)
     getChannelEvents(channel?.id)
   }
+
+  if(!event) return <div>Loading...</div>
 
   return (
     <Form
       onSubmit={onCreateEvent}
-      initialValues={{ author: channel?.author, duration:durations[2], languages: channel?.languages.map(lang => lang.native) }}
+      initialValues={{ name:event.name, author: event.author, datetime:new Date(event.datetime), duration:event.duration, languages: event.languages.map(lang=>lang.native), link:event.link, details: event.details }}
       render={({ handleSubmit, form, submitting, pristine, values }) => (
         <EventForm onSubmit={handleSubmit}>
-          <h2 style={{ fontSize: "1.4em", textAlign: "center" }}>New event</h2>
+          <h2 style={{ fontSize: "1.4em", textAlign: "center" }}>{`Edit event ${event.name}`}</h2>
           <ImgPreview src={imageUrl} alt="image preview" />
           <Field name="name" validate={required}>
             {({ input, meta }) => (
@@ -101,12 +104,11 @@ const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, image
                   multiple
                   value={values.languages}
                   renderValue={(selected) =>
-                    (selected as Array<string>).join(', ')
+                    (selected as Array<string>).join(',')
                   }
                 >
                   {channel?.languages.map((lang) => {
                     return (
-                      //@ts-ignore
                       <MenuItem value={lang.native} key={lang.code}>
                         <Checkbox checked={values.languages.indexOf(lang.native) > -1} />
                         {lang.native}
@@ -136,7 +138,13 @@ const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, image
   )
 }
 
-export default connect(null, { createEvent, getChannelEvents })(CreateEventForm)
+const mapStateToProps = (state:TState) => {
+  return {
+    event: state.myChannel.eventToEdit
+  }
+}
+
+export default connect(mapStateToProps, { editEvent, getChannelEvents, setEventToEdit })(EditEventForm)
 
 // Styled Components
 

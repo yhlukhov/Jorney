@@ -10,16 +10,14 @@ import { getChannelEvents } from "../../Store/myChannelReducer"
 type TProps = {
   event: TEvent
   deleteEvent: any
+  onEditEvent: any
   getChannelEvents: any
 }
 
-const MyEvent: FC<TProps> = ({ event, deleteEvent, getChannelEvents }) => {
+const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents }) => {
   const [openAlert, setOpenAlert] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
 
-  const onEditEvent = () => {
-    console.log('edit event: ', event.id)
-  }
   const onDeleteEvent = async () => {
     const channelId = event.channelId
     await deleteEvent(event.id)

@@ -4,7 +4,6 @@ import CreateEventForm from "./CreateEventForm"
 import { TState } from "../../Store/store"
 import { connect } from "react-redux"
 import { TChannel } from "../../Common/Types/TChannel"
-import styled from 'styled-components'
 
 type TProps = {
   openModal: boolean
@@ -17,9 +16,9 @@ type TProps = {
 const CreateEventDialog: FC<TProps> = ({ openModal, setOpenModal, onCloseModal, channel, imageUrl }) => {
   return (
     <Dialog open={openModal} onClose={onCloseModal} maxWidth="xl">
-      <EventFormDiv>
+      <div style={{margin:"15px"}}>
         <CreateEventForm channel={channel} setOpenModal={setOpenModal} imageUrl={imageUrl} />
-      </EventFormDiv> 
+      </div> 
     </Dialog>
   )
 }
@@ -32,9 +31,3 @@ const mapStateToProps = (state: TState) => {
 }
 
 export default connect(mapStateToProps)(CreateEventDialog)
-
-//* Styled Components
-
-const EventFormDiv = styled.div`
-  margin: 15px;
-`
