@@ -1,7 +1,7 @@
-import { FC, useState } from "react"
+import { FC } from "react"
 import { Field, Form } from "react-final-form"
 import styled from "styled-components"
-import { required} from '../../Common/validators'
+import { required } from "../../Common/validators"
 import { TChannel } from "../../Common/Types/TChannel"
 import InputLabel from "@material-ui/core/InputLabel"
 import FormControl from "@material-ui/core/FormControl"
@@ -26,31 +26,33 @@ type TProps = {
 
 const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, imageUrl, getChannelEvents }) => {
   const onCreateEvent = async (values: TEventValues) => {
-    const { name, author, datetime, duration, languages, link, details } = { ...values }
-    const event = {
-      name,
-      author,
-      datetime: new Date(datetime),
-      duration,
-      details: details || "",
-      languages: languages.map(language => channel?.languages.find(lang => lang.native == language)),
-      country: channel?.country,
-      link,
-      image: channel?.image,
-      channelId: channel?.id,
-      channelName: channel?.name,
-      bookmark: false,
-      approved: true
-    }
-    await createEvent(event)
-    setOpenModal(false)
-    getChannelEvents(channel?.id)
+    if (channel) {
+      const { name, author, datetime, duration, languages, link, details } = { ...values }
+      const event = {
+        name,
+        author,
+        datetime: new Date(datetime),
+        duration,
+        details: details || "",
+        languages: languages.map((language) => channel.languages.find((lang) => lang.native == language)),
+        country: channel.country,
+        link,
+        image: channel.image,
+        channelId: channel.id,
+        channelName: channel.name,
+        bookmark: false,
+        approved: channel.approved,
+      }
+      await createEvent(event)
+      setOpenModal(false)
+      getChannelEvents(channel.id)
+    } else throw new Error ('Problem accessing channel information. Please, try again')
   }
 
-  return (
+  if(channel) return (
     <Form
       onSubmit={onCreateEvent}
-      initialValues={{ author: channel?.author, duration:durations[2], languages: channel?.languages.map(lang => lang.native) }}
+      initialValues={{ author: channel.author, duration: durations[2], languages: channel.languages.map((lang) => lang.native) }}
       render={({ handleSubmit, form, submitting, pristine, values }) => (
         <EventForm onSubmit={handleSubmit}>
           <h2 style={{ fontSize: "1.4em", textAlign: "center" }}>New event</h2>
@@ -78,10 +80,7 @@ const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, image
             {({ input }) => (
               <FormControl>
                 <InputLabel id="select-duration">Duration</InputLabel>
-                <Select
-                  {...input}
-                  labelId="select-duration"
-                >
+                <Select {...input} labelId="select-duration">
                   {durations.map((item) => (
                     <MenuItem value={item} key={item}>
                       {item}
@@ -96,15 +95,8 @@ const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, image
             {({ input, meta }) => (
               <FormControl required>
                 <InputLabel>Select languages</InputLabel>
-                <Select
-                  {...input}
-                  multiple
-                  value={values.languages}
-                  renderValue={(selected) =>
-                    (selected as Array<string>).join(', ')
-                  }
-                >
-                  {channel?.languages.map((lang) => {
+                <Select {...input} multiple value={values.languages} renderValue={(selected) => (selected as Array<string>).join(", ")}>
+                  {channel.languages.map((lang) => {
                     return (
                       //@ts-ignore
                       <MenuItem value={lang.native} key={lang.code}>
@@ -134,6 +126,7 @@ const CreateEventForm: FC<TProps> = ({ createEvent, channel, setOpenModal, image
       )}
     />
   )
+  else return <div>Loading...</div>
 }
 
 export default connect(null, { createEvent, getChannelEvents })(CreateEventForm)

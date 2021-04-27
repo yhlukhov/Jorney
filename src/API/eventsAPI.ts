@@ -12,7 +12,9 @@ export const eventsAPI = {
     else
       return db.collection("events").where("country", "in", countries).where("approved", "==", true).where("datetime", ">=", now).get()
   },
-
+  loadEvent: (id:string)=>{
+    return db.collection('events').doc(id).get()
+  },
   loadChannelEvents: (id: string) => {
     return db.collection("events").where("channelId", "==", id).get()
   },

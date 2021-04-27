@@ -1,8 +1,8 @@
-
-import { connect } from 'react-redux'
 import { FC } from "react";
+import { connect } from 'react-redux'
 import { Redirect } from "react-router";
 import { TState } from "../../Store/store";
+import ChannelsList from "./ChannelsList";
 
 type TProps = {
   loggedIn: boolean,
@@ -10,10 +10,10 @@ type TProps = {
 }
 
 const Admin: FC<TProps> = ({loggedIn, role}) => {
-  if(!loggedIn || role == undefined || role !== "admin2311") return <Redirect to="login" />
+  if(!loggedIn || role !== "admin2311") return <Redirect to="login" />
   return (
     <div>
-      Admin
+      <ChannelsList />
     </div>
   )
 }

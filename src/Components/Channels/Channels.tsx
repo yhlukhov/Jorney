@@ -1,36 +1,61 @@
 import { useEffect } from "react"
-import { connect } from 'react-redux'
+import { connect } from "react-redux"
 import styled from "styled-components"
-import AOS from 'aos'
-import 'aos/dist/aos.css'
+import AOS from "aos"
+import "aos/dist/aos.css"
 import ChannelItem from "./ChannelItem/ChannelItem"
 import { TChannel } from "../../Common/Types/TChannel"
-import { getChannels } from '../../Store/channelListReducer'
-import { TState } from '../../Store/store'
+import { getChannels } from "../../Store/channelListReducer"
+import { TState } from "../../Store/store"
+import Filters from "../Filters/Filters"
+import Teachings from "../Teachings/Teachings"
+import { TCountry } from "../../Common/Types/TCountry"
+import { TLanguage } from "../../Common/Types/TLanguage"
+import { getCountryFilter, getLanguageFilter } from '../../Store/appReducer'
 
 type PropsType = {
   channels: Array<TChannel>
   getChannels: any
+  countries: Array<TCountry>
+  languages: Array<TLanguage>
+  getCountryFilter: any
+  getLanguageFilter: any
 }
 
-const Channels = ({ channels, getChannels }: PropsType) => {
+const Channels = ({ channels, getChannels, countries, languages, getCountryFilter, getLanguageFilter }: PropsType) => {
   const channelsListJSX = channels.map((channel) => <ChannelItem channel={channel} key={channel.id} />)
   useEffect(() => {
-    getChannels()
-    AOS.init({duration:800})
+    getCountryFilter()
+    getLanguageFilter()
+    AOS.init({ duration: 800 })
   }, [])
-  if(!channels.length) return <div style={{fontSize:"40px"}}>Loading...</div>
-  return <ChannelsSection data-aos="fade-up">{channelsListJSX}</ChannelsSection>
+  useEffect(()=>{
+    countries && languages && getChannels(countries, languages)
+  }, [countries, languages])
+  if (!channels.length) return <div style={{ fontSize: "40px" }}>Loading...</div>
+  return (
+    <div>
+      <div style={{display:'flex'}}>
+        <Filters />
+        <Teachings />
+      </div>
+      <ChannelsSection data-aos="fade-up">{channelsListJSX}</ChannelsSection>
+    </div>
+  )
 }
 
-const mapStateToProps = (state:TState) => {
+const mapStateToProps = (state: TState) => {
   return {
-    channels: state.channels.channelsList
+    channels: state.channels.channelsList,
+    countries: state.app.countryFilter,
+    languages: state.app.languageFilter
   }
 }
 
 const actionCreators = {
-  getChannels
+  getChannels,
+  getCountryFilter,
+  getLanguageFilter
 }
 
 export default connect(mapStateToProps, actionCreators)(Channels)

@@ -4,6 +4,7 @@ import { storageAPI } from '../API/storageAPI'
 import { InferTActions } from "./store"
 import { TChannel } from "../Common/Types/TChannel"
 import { TEvent } from "../Common/Types/TEvent"
+import { eventsAPI } from '../API/eventsAPI'
 
 const SET_CHANNEL_DATA = "SET_CHANNEL_DATA"
 const SET_CHANNEL_EVENTS = "SET_CHANNEL_EVENTS"
@@ -81,14 +82,24 @@ const actions = {
 }
 
 //* THUNK CREATORS
-export const getChannel = (id: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+export const getChannel = (id: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
   const res = await channelsAPI.getChannel(id)
   const channel = {...res.data(), id:res.id} as TChannel
   dispatch(actions.setChannelData(channel))
   dispatch(getChannelImage(channel.image))
 }
 
-export const getChannelImage = (path:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+export const getChannelImage = (path:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
   const imageUrl = await storageAPI.getImageUrl(path)
   dispatch(setImageUrl(imageUrl))
+}
+
+export const getChannelEvents = (id:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
+  const events = [] as Array<TEvent>
+  const eventsData = await eventsAPI.loadChannelEvents(id)
+  eventsData.forEach(event => {
+    const data = event.data()
+    events.push({ ...(data as TEvent), datetime:data.datetime.toDate(), id:event.id})
+  })
+  dispatch(setChannelEvents(events))
 }

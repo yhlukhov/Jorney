@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import styled from 'styled-components'
+import history from '../../../Common/Utils/history'
 import { TEvent } from '../../../Common/Types/TEvent';
 import { TLanguage } from '../../../Common/Types/TLanguage';
 
@@ -9,9 +10,9 @@ type TProps = {
 
 export const renderLangs = (langs:Array<TLanguage>) => langs.reduce((acc, lang)=>acc + lang.native + ' ,', "").slice(0, -1)
 
-const Event: FC<TProps> = ({event}) => {
+const EventItem: FC<TProps> = ({event}) => {
   return <EventDiv>
-    <div>{event.name}</div>
+    <div onClick={()=>{history.push(`events/${event.id}`)}}>{event.name}</div>
     <div>{event.author}</div>
     <div>{event.channelName}</div>
     <div>{event.datetime.toLocaleString()} </div>
@@ -20,11 +21,13 @@ const Event: FC<TProps> = ({event}) => {
     <div>{event.country.native}</div>
     <div>{event.channelName}</div>
     <div>{renderLangs(event.languages)}</div>
-    <div>{event.link}</div>
+    <div>
+      <a href={event.link} target='_blank'>LINK</a>
+    </div>
   </EventDiv>;
 };
 
-export default Event;
+export default EventItem;
 
 
 //Styled Components
@@ -36,6 +39,7 @@ export const EventDiv = styled.div`
   margin: 10px;
   border: 1px solid salmon;
   border-radius: 8px;
+  background-color: #EDE0D8;
 `
 export const EventText = styled.textarea`
   background-color: transparent;

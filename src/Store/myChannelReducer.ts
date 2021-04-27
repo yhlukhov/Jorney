@@ -54,7 +54,7 @@ export const setEventToEdit = (event:TEvent) => {
 }
 
 //* THUNK CREATORS
-export const getChannelEvents = (id:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+export const getChannelEvents = (id:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
   eventsAPI.loadChannelEvents(id).then(snap => {
     let events = [] as Array<TEvent>
     snap.forEach(doc => { 

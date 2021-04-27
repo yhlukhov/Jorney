@@ -29,7 +29,7 @@ export const authAPI = {
       country,
       languages,
       role: "user",
-      approved: false,
+      approved: true,
       subscribe: true,
     })
   },

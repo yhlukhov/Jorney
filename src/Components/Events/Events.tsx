@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import styled from 'styled-components';
-import Event from '../Events/Event/Event';
+import Event from './EventItem/EventItem';
 import { TEvent } from '../../Common/Types/TEvent'
 import { TState } from '../../Store/store'
 import { loadEvents } from '../../Store/eventListReducer'

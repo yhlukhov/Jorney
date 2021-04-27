@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import { NavLink } from "react-router-dom"
+import { connect } from 'react-redux'
+import { TState } from '../../Store/store'
 
 type TProps = {
   loggedIn:boolean,
@@ -8,7 +10,7 @@ type TProps = {
 
 const NavItems: FC<TProps> = ({loggedIn, role}) => {
   return (
-    <nav style={{display:'flex', justifyContent:'space-around'}}>
+    <nav style={{display:'flex', justifyContent:'space-around', marginBottom: "10px"}}>
       <NavLink to=''>Home</NavLink>
       <NavLink to='/channels'>Channels</NavLink>
       <NavLink to='/bookmarks'>Bookmarks</NavLink>
@@ -19,4 +21,11 @@ const NavItems: FC<TProps> = ({loggedIn, role}) => {
   )
 }
 
-export default NavItems
+const mapStateToProps = (state:TState) => {
+  return{
+    loggedIn: state.auth.loggedIn,
+    role: state.auth.channel?.role
+  }
+}
+
+export default connect(mapStateToProps)(NavItems)

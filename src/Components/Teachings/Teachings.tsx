@@ -1,9 +1,13 @@
 import { FunctionComponent } from "react";
+import {teachings, count} from '../../Common/Data/teachings'
+import { random } from '../../Common/functions'
 
 const Teachings: FunctionComponent = () => {
+  const id = random(count)
   return (
-    <div style={{border:"1px solid lightcoral"}}>
-      Teachings
+    <div style={{width:"70%", textAlign:"center", margin: "5px 10px"}}>
+      <div>{teachings[id].ru}</div>
+      <div>{teachings[id].en}</div>
     </div>
   )
 }

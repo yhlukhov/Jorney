@@ -1,11 +1,10 @@
 import { FC, useState } from "react"
 import { connect } from "react-redux"
 import { TEvent } from "../../Common/Types/TEvent"
-import { EventDiv, EventText, renderLangs } from '../Events/Event/Event'
+import { EventDiv, EventText, renderLangs } from "../Events/EventItem/EventItem"
 import AlertDialog from "../../Common/Components/AlertDialog"
-import { deleteEvent } from '../../Store/eventListReducer'
+import { deleteEvent } from "../../Store/eventListReducer"
 import { getChannelEvents } from "../../Store/myChannelReducer"
-
 
 type TProps = {
   event: TEvent
@@ -24,7 +23,7 @@ const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents
     setOpenAlert(false)
     getChannelEvents(channelId)
   }
-  
+
   return (
     <EventDiv>
       <div>{event.name}</div>
@@ -35,12 +34,12 @@ const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents
       <div>{event.country.native}</div>
       <div>{event.channelName}</div>
       <div>{renderLangs(event.languages)}</div>
-      <div>{event.link}</div>
-      <button
-        onClick={onEditEvent}
-      >
-        Edit
-      </button>
+      <div>
+        <a href={event.link} target="_blank">
+          LINK
+        </a>
+      </div>
+      <button onClick={onEditEvent}>Edit</button>
       <button
         onClick={() => {
           setOpenAlert(true)
@@ -48,9 +47,14 @@ const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents
       >
         Delete
       </button>
-      <AlertDialog open={openAlert} setOpen={setOpenAlert} agree={onDeleteEvent} message={`Sure you want to delete event "${event.name}"?`} />
+      <AlertDialog
+        open={openAlert}
+        setOpen={setOpenAlert}
+        agree={onDeleteEvent}
+        message={`Sure you want to delete event "${event.name}"?`}
+      />
     </EventDiv>
   )
 }
 
-export default connect(null, {deleteEvent, getChannelEvents})(MyEvent)
+export default connect(null, { deleteEvent, getChannelEvents })(MyEvent)

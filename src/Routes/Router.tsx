@@ -1,7 +1,5 @@
 import { FC } from "react"
-import { connect } from 'react-redux'
 import { Route, Switch } from "react-router-dom"
-import { TState } from '../Store/store'
 import Channels from "../Components/Channels/Channels"
 import Home from "../Components/Home/Home"
 import Bookmarks from "../Components/Bookmarks/Bookmarks"
@@ -9,17 +7,15 @@ import Login from "../Components/Login/Login"
 import MyChannel from "../Components/MyChannel/MyChannel"
 import Admin from "../Components/Admin/Admin"
 import Channel from "../Components/Channel/Channel"
+import Event from "../Components/Event/Event"
+import EventItem from "../Components/Events/EventItem/EventItem"
 import { NotFound } from "../Common/Components/NotFound"
 
-type TProps = {
-  loggedIn: boolean
-}
-
-const Routes: FC<TProps> = ({ loggedIn }) => {
+const Routes: FC = () => { 
   return (
     <Switch>
-      <Route exact path="/" render={() => <Home />} />
-      <Route path="/home" render={() => <Home />} />
+      <Route exact path="/" component={Home} />
+      <Route path="/events/:id" component={Event} /> 
       <Route path="/channels" render={() => <Channels />} />
       <Route path="/channel/:id" render={() => <Channel />} />
       <Route path="/bookmarks" render={() => <Bookmarks />} />
@@ -31,10 +27,4 @@ const Routes: FC<TProps> = ({ loggedIn }) => {
   )
 }
 
-const mapStateToProps = (state:TState) => {
-  return {
-    loggedIn: state.auth.loggedIn
-  }
-}
-
-export default connect(mapStateToProps)(Routes)
+export default Routes

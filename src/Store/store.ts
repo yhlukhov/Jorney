@@ -1,19 +1,23 @@
+import thunk from "redux-thunk"
 import { combineReducers } from "@reduxjs/toolkit"
 import { createStore, applyMiddleware } from "redux"
 import { composeWithDevTools } from "redux-devtools-extension"
-import thunk from "redux-thunk"
-import channelListReducer from "./channelListReducer"
+import { channelListReducer } from "./channelListReducer"
+import { eventListReducer } from './eventListReducer'
 import { myChannelReducer } from "./myChannelReducer"
 import { channelReducer } from "./channelReducer"
 import { authReducer } from "./authReducer"
 import { appReducer } from "./appReducer"
-import { eventListReducer } from './eventListReducer'
+import { adminReducer } from "./adminReducer"
+import { eventReducer } from "./eventReducer"
 
 const rootReducer = combineReducers({
   myChannel: myChannelReducer,
   channels: channelListReducer,
   channel: channelReducer,
   events: eventListReducer,
+  event: eventReducer,
+  admin: adminReducer,
   auth: authReducer,
   app: appReducer,
 })
