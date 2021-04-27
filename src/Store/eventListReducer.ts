@@ -2,6 +2,8 @@ import { TEvent } from "../Common/Types/TEvent"
 import { InferTActions } from "./store"
 import { eventsAPI } from "../API/eventsAPI"
 import { ThunkAction } from "redux-thunk"
+import { TCountry } from "../Common/Types/TCountry"
+import { TLanguage } from "../Common/Types/TLanguage"
 
 type TState = typeof initialState
 type TActions = InferTActions<typeof actions>
@@ -40,7 +42,8 @@ const actions = {
 
 //* THUNK CREATORS
 
-export const loadEvents = (countries: string[], languages: string[]): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+export const loadEvents = (countries: TCountry[], languages: TLanguage[]): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
+  console.log(countries, languages)
   let snapshot = await eventsAPI.loadEvents(countries, languages)
   let events = [] as Array<TEvent>
   snapshot.forEach((event) => {

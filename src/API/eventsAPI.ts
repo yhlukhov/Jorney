@@ -1,8 +1,10 @@
 import { db } from "./APIConfig"
 import { TEvent } from "../Common/Types/TEvent"
+import { TCountry } from "../Common/Types/TCountry"
+import { TLanguage } from "../Common/Types/TLanguage"
 
 export const eventsAPI = {
-  loadEvents: (countries: string[], languages: string[]) => {
+  loadEvents: (countries: TCountry[], languages: TLanguage[]) => { 
     let now = new Date()
     now.setTime(now.getTime() - 60 * 60 * 1000) // time = now - 1hr
     if (countries.length == 0 && languages.length == 0) {

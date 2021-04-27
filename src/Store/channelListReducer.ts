@@ -41,8 +41,12 @@ export const actions = {
 export const getChannels = (countries: TCountry[], languages: TLanguage[]): ThunkAction<Promise<void>, TState, unknown, TActions> => async (
   dispatch
 ) => {
-    const channels = await channelsAPI.getChannels(countries, languages)
+    let channels = [] as Array<TChannel>
+    const snapshot = await channelsAPI.getChannels(countries, languages)
+    snapshot.forEach((channel) => {
+      channels.push({ ...channel.data(), id: channel.id } as TChannel)
+    })
     dispatch(actions.setChannels(channels))
 }
 
-//* 3 - Channels Selectors //
+//* 3 - Channels Selectors // 
