@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+#diagrams
+/src/Common/Diagrams
+
 # production
 /build
 

@@ -15,9 +15,13 @@ import { countries, international } from "../../Common/Data/Countries"
 import { languages } from "../../Common/Data/Languages"
 import { TCountry } from "../../Common/Types/TCountry"
 import { TLanguage } from "../../Common/Types/TLanguage"
+import { signUp } from '../../Store/authReducer'
+import { TState } from "../../Store/store"
+import { connect } from "react-redux"
 
 type TProps = {
   signUp: any
+  error: any
 }
 export type TSignUp = {
   name: string
@@ -80,7 +84,7 @@ const FileField = ({ name }: IFile) => (
   </Field>
 )
 
-const RegisterForm: FC<TProps> = ({ signUp }) => {
+const RegisterForm: FC<TProps> = ({ signUp, error }) => {
   const [pwType, setPwType] = useState("password")
   const switchPwType = () => setPwType(pwType === "text" ? "password" : "text")
   const classes = useStyles()
@@ -217,10 +221,17 @@ const RegisterForm: FC<TProps> = ({ signUp }) => {
 
           <FileField name="images" />
           <button type="submit">Sign Up</button>
+          <div>{error.message}</div>
         </form>
       )}
     />
   )
 }
 
-export default RegisterForm
+const mapStateToProps = (state: TState) => {
+  return {
+    error: state.auth.signUpError
+  }
+}
+
+export default connect(mapStateToProps, {signUp})(RegisterForm)

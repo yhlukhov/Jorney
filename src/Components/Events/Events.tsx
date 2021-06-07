@@ -29,7 +29,7 @@ const Events: FC<TProps> = ({events, countries, languages, loadEvents}) => {
 
   return (
     <EventsList data-aos="fade-up" >
-      {events.map(event=><Event event={event} key={event.id} />)}
+      {events.map(event=><Event event={event} own={false} key={event.id} />)}
     </EventsList>
   )
 }

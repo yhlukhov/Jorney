@@ -25,8 +25,11 @@ const ChannelPage: FC<TProps> = ({ channel, events, imgUrl, getChannel, getChann
 
   useEffect(() => {
     getChannel(id)
-    getChannelEvents(id)
   }, [])
+
+  useEffect(()=>{
+    getChannelEvents(id)
+  },[events])
 
   if (!channel) return <div>Loading...</div>
 
@@ -46,7 +49,7 @@ const ChannelPage: FC<TProps> = ({ channel, events, imgUrl, getChannel, getChann
         </div>
       </div>
       <div style={{display:"flex", flexWrap:'wrap'}}>
-        {events.map(event => <EventItem event={event} key={event.id}/>)}
+        {events.map(event => <EventItem event={event} own={false} key={event.id}/>)}
       </div>
     </div>
   )

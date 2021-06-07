@@ -21,6 +21,7 @@ export const authAPI = {
   ): Promise<void> => {
     await storageAPI.uploadFile(`${name}/${image.name}`, image)
     return db.collection("channels").doc(id).set({
+      id,
       name,
       email,
       author,
@@ -31,6 +32,7 @@ export const authAPI = {
       role: "user",
       approved: true,
       subscribe: true,
+      bookmark: false
     })
   },
 

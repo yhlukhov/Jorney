@@ -3,7 +3,7 @@ import { TEvent } from "../Common/Types/TEvent"
 import { InferTActions } from "./store"
 import { eventsAPI } from "../API/eventsAPI"
 
-const SET_EVENT = "EVENT/SET_EVENT"
+const SET_EVENT = 'EVENT/SET_EVENT'
 
 const initialState = {
   event: null as TEvent | null,
@@ -18,7 +18,7 @@ export const eventReducer = (state = initialState, action: TActions) => {
     case SET_EVENT:
       return {
         ...state,
-        event: action.data.event,
+        event: action.data.event
       }
     default:
       return state
@@ -36,8 +36,9 @@ const setEvent = (event: TEvent) => {
   }
 }
 
+
 const actions = {
-  setEvent,
+  setEvent
 }
 
 //*Thunk Creators

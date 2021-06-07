@@ -10,6 +10,7 @@ import { authReducer } from "./authReducer"
 import { appReducer } from "./appReducer"
 import { adminReducer } from "./adminReducer"
 import { eventReducer } from "./eventReducer"
+import { bookmarksReducer } from './bookmarksReducer'
 
 const rootReducer = combineReducers({
   myChannel: myChannelReducer,
@@ -17,10 +18,12 @@ const rootReducer = combineReducers({
   channel: channelReducer,
   events: eventListReducer,
   event: eventReducer,
+  bookmarks: bookmarksReducer,
   admin: adminReducer,
   auth: authReducer,
   app: appReducer,
 })
+
 export type TState = ReturnType<typeof rootReducer>
 
 const composeEnhancers = composeWithDevTools(applyMiddleware(thunk))
@@ -34,6 +37,3 @@ type InferPropertiesTypes<T> = T extends { [key: string]: infer U } ? U : never
 export type InferTActions<T extends { [key: string]: (...args: Array<any>) => { type: string; data?: any } }> = ReturnType<
   InferPropertiesTypes<T>
 >
-
-//@ts-ignore
-window.__store__ = store // for console usage

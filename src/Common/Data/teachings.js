@@ -47,6 +47,10 @@ export const teachings = [
       en: "Being judgemental causes suffering",
       ru: "Быть осуждающим - причиняет страдание"
   },
+  {
+      en: "Being judgemental causes suffering",
+      ru: "Быть осуждающим - причиняет страдание"
+  },
 ]
 
 export const count = teachings.length

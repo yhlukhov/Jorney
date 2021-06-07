@@ -12,5 +12,6 @@ export type TChannel = {
   role: string
   subscribe: boolean
   approved: boolean
+  bookmark: boolean
   id: string
 }

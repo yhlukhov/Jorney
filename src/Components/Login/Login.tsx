@@ -1,43 +1,62 @@
 import { FC } from "react"
 import { Redirect } from 'react-router'
 import { connect } from 'react-redux'
-import { signUp, signIn } from '../../Store/authReducer'
+import { signUp } from '../../Store/authReducer'
 import { TState } from "../../Store/store";
 import LoginForm from "./LoginForm"
 import RegisterForm from "./RegisterForm"
+import styled from "styled-components";
+import loginImg from '../../Assets/Images/login.jpg'
+import signupImg from '../../Assets/Images/signup.jpg'
 
 type TProps = {
-  signUp: any
-  signIn: any
   loggedIn: boolean
-  error: any
 }
 
-const Login: FC<TProps> = ({ signUp, signIn, loggedIn, error }) => {
+const Login: FC<TProps> = ({ loggedIn }) => {
   if(loggedIn) return <Redirect to="/mychannel" />
   return (
-    <>
-      <div>{error.code}</div>
-      <div>{error.message}</div>
-      <div style={{display:"flex", justifyContent:"center"}}>
-        <RegisterForm signUp={signUp} />
-        <LoginForm signIn={signIn} />
-      </div>
-    </>
+    
+      <FormDiv>
+        <RegDiv>
+          <h1>Sign Up</h1>
+          <RegisterForm />
+        </RegDiv>
+        <LoginDiv>
+          <h1>Sign In</h1>
+          <LoginForm />
+        </LoginDiv>
+      </FormDiv>
+    
   )
 }
 
 const mapStateToProps = (state:TState) => {
   return {
-    loggedIn: state.auth.loggedIn,
-    error: state.auth.error
+    loggedIn: state.auth.loggedIn
   }
 }
 
-const ActionCreators = {
-  signUp,
-  signIn
-}
+export default connect(mapStateToProps)(Login)
 
-export default connect(mapStateToProps, ActionCreators)(Login)
 
+// Styled Components //
+
+const FormDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const RegDiv = styled.div`
+  padding: 20px;
+  background-image: url(${signupImg});
+  background-size: cover;
+  box-shadow: -2px 2px 2px #e7e07b81;
+`
+
+const LoginDiv = styled.div`
+  padding: 25px;
+  background-image: url(${loginImg});
+  background-size: cover;
+  box-shadow: 2px 2px 2px #78e6e188;
+`

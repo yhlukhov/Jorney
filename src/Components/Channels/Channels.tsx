@@ -23,7 +23,7 @@ type PropsType = {
 }
 
 const Channels = ({ channels, getChannels, countries, languages, getCountryFilter, getLanguageFilter }: PropsType) => {
-  const channelsListJSX = channels.map((channel) => <ChannelItem channel={channel} key={channel.id} />)
+  
   useEffect(() => {
     getCountryFilter()
     getLanguageFilter()
@@ -33,20 +33,21 @@ const Channels = ({ channels, getChannels, countries, languages, getCountryFilte
     countries && languages && getChannels(countries, languages)
   }, [countries, languages])
   if (!channels.length) return <div style={{ fontSize: "40px" }}>Loading...</div>
+  const channelList = channels.map((channel) => <ChannelItem channel={channel} key={channel.id} />)
   return (
     <div>
       <div style={{display:'flex'}}>
         <Filters />
         <Teachings />
       </div>
-      <ChannelsSection data-aos="fade-up">{channelsListJSX}</ChannelsSection>
+      <ChannelsSection data-aos="fade-up">{channelList}</ChannelsSection>
     </div>
   )
 }
 
 const mapStateToProps = (state: TState) => {
   return {
-    channels: state.channels.channelsList,
+    channels: state.channels.channelList,
     countries: state.app.countryFilter,
     languages: state.app.languageFilter
   }

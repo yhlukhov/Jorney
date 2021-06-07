@@ -2,7 +2,7 @@ import { FC } from "react";
 import { connect } from 'react-redux'
 import { Redirect } from "react-router";
 import { TState } from "../../Store/store";
-import ChannelsList from "./ChannelsList";
+import ChannelList from "./ChannelListAdm";
 
 type TProps = {
   loggedIn: boolean,
@@ -13,7 +13,7 @@ const Admin: FC<TProps> = ({loggedIn, role}) => {
   if(!loggedIn || role !== "admin2311") return <Redirect to="login" />
   return (
     <div>
-      <ChannelsList />
+      <ChannelList />
     </div>
   )
 }

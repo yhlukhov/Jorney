@@ -1,10 +1,10 @@
 import { ThunkAction } from "redux-thunk"
 import { channelsAPI } from "../API/channelsAPI"
-import { storageAPI } from '../API/storageAPI'
+import { storageAPI } from "../API/storageAPI"
 import { InferTActions } from "./store"
 import { TChannel } from "../Common/Types/TChannel"
 import { TEvent } from "../Common/Types/TEvent"
-import { eventsAPI } from '../API/eventsAPI'
+import { eventsAPI } from "../API/eventsAPI"
 
 const SET_CHANNEL_DATA = "SET_CHANNEL_DATA"
 const SET_CHANNEL_EVENTS = "SET_CHANNEL_EVENTS"
@@ -13,7 +13,7 @@ const SET_IMAGE_URL = "CHANNEL/SET_IMAGE_URL"
 const initialState = {
   channel: {} as TChannel,
   events: [] as Array<TEvent>,
-  channelImage: undefined as undefined | string
+  channelImage: undefined as undefined | string,
 }
 
 type TState = typeof initialState
@@ -38,7 +38,7 @@ export const channelReducer = (state = initialState, action: TActions): TState =
       return {
         ...state,
         //@ts-ignore
-        channelImage: action.data.imageUrl
+        channelImage: action.data.imageUrl,
       }
     default:
       return state
@@ -51,8 +51,8 @@ export const setChannelData = (channel: TChannel) => {
   return {
     type: SET_CHANNEL_DATA,
     data: {
-      channel
-    }
+      channel,
+    },
   }
 }
 
@@ -60,17 +60,17 @@ export const setChannelEvents = (events: Array<TEvent>) => {
   return {
     type: SET_CHANNEL_EVENTS,
     data: {
-      events
-    }
+      events,
+    },
   }
 }
 
-export const setImageUrl = (imageUrl:string) => {
+export const setImageUrl = (imageUrl: string) => {
   return {
     type: SET_IMAGE_URL,
     data: {
-      imageUrl
-    }
+      imageUrl,
+    },
   }
 }
 
@@ -78,28 +78,34 @@ export const setImageUrl = (imageUrl:string) => {
 const actions = {
   setChannelData,
   setChannelEvents,
-  setImageUrl
+  setImageUrl,
 }
 
 //* THUNK CREATORS
-export const getChannel = (id: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
+export const getChannel = (id: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
   const res = await channelsAPI.getChannel(id)
-  const channel = {...res.data(), id:res.id} as TChannel
+  const channel = { ...res.data(), id: res.id } as TChannel
   dispatch(actions.setChannelData(channel))
   dispatch(getChannelImage(channel.image))
 }
 
-export const getChannelImage = (path:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
+export const getChannelImage = (path: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
   const imageUrl = await storageAPI.getImageUrl(path)
   dispatch(setImageUrl(imageUrl))
 }
 
-export const getChannelEvents = (id:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
+export const getChannelEvents = (id: string): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
   const events = [] as Array<TEvent>
   const eventsData = await eventsAPI.loadChannelEvents(id)
-  eventsData.forEach(event => {
+  const LS = localStorage.getItem('eventBookmarks')
+  const bookmarks = LS ? (JSON.parse(LS) as Array<string>) : ([] as Array<string>)
+  eventsData.forEach((event) => {
     const data = event.data()
-    events.push({ ...(data as TEvent), datetime:data.datetime.toDate(), id:event.id})
+    events.push({ ...(data as TEvent), datetime: data.datetime.toDate(), id: event.id })
   })
+  bookmarks.length &&
+    events.forEach((event) => {
+      if (bookmarks.find((bookmark) => bookmark === event.id)) event.bookmark = true
+    })
   dispatch(setChannelEvents(events))
 }

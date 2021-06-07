@@ -3,16 +3,20 @@ import { Field, Form } from "react-final-form"
 import { composeValidators, required, minLength } from "../../Common/validators"
 import css from './form.module.css'
 import { FieldErr } from '../../Common/StyledComponents/index'
+import { signIn } from '../../Store/authReducer'
+import { connect } from "react-redux"
+import { TState } from "../../Store/store"
 
 type TProps = {
   signIn: any
+  error: any
 }
 type TLogin = {
   email: string
   password: string
 }
 
-const LoginForm: FC<TProps> = ({ signIn }) => {
+const LoginForm: FC<TProps> = ({ signIn, error }) => {  
   const onSignIn = (values: TLogin) => {
     const { email, password } = { ...values }
     signIn(email, password)
@@ -42,10 +46,17 @@ const LoginForm: FC<TProps> = ({ signIn }) => {
             )}
           </Field>
           <button type="submit" className={css.field}>Sign In</button>
+          <div>{error.message}</div> 
         </form>
       )}
     />
   )
 }
 
-export default LoginForm
+const mapStateToProps = (state:TState) => {
+  return {
+    error: state.auth.loginError
+  }
+}
+
+export default connect(mapStateToProps, {signIn})(LoginForm)

@@ -18,7 +18,13 @@ export const eventsAPI = {
     return db.collection('events').doc(id).get()
   },
   loadChannelEvents: (id: string) => {
+    return db.collection("events").where("channelId", "==", id).where("approved", "==", true).get()
+  },
+  loadChannelEventsAdmin: (id: string) => {
     return db.collection("events").where("channelId", "==", id).get()
+  },
+  loadBookmarkEvents: (ids:string[]) => {
+    return db.collection('events').where('id', 'in', ids).where("approved", "==", true).get()
   },
   createEvent: async (event: TEvent) => {
     return await db.collection("events").add(event)
@@ -28,5 +34,11 @@ export const eventsAPI = {
   },
   deleteEvent: async (id: string) => {
     return db.collection("events").doc(id).delete()
+  },
+  approveEvent: async(id:string) => {
+    return db.collection('events').doc(id).update({approved:true})
+  },
+  lockEvent: async(id:string) => {
+    return db.collection('events').doc(id).update({approved:false})
   },
 }

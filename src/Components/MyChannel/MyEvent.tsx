@@ -1,7 +1,8 @@
 import { FC, useState } from "react"
 import { connect } from "react-redux"
+import history from "../../Common/Utils/history"
 import { TEvent } from "../../Common/Types/TEvent"
-import { EventDiv, EventText, renderLangs } from "../Events/EventItem/EventItem"
+import { EventDiv, EventInfo, EventText, renderLangs } from "../Events/EventItem/EventItem"
 import AlertDialog from "../../Common/Components/AlertDialog"
 import { deleteEvent } from "../../Store/eventListReducer"
 import { getChannelEvents } from "../../Store/myChannelReducer"
@@ -26,19 +27,28 @@ const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents
 
   return (
     <EventDiv>
-      <div>{event.name}</div>
-      <div>{event.author}</div>
-      <div>{event.datetime.toLocaleString()} </div>
-      <div>{event.duration}</div>
-      <EventText value={event.details} disabled />
-      <div>{event.country.native}</div>
-      <div>{event.channelName}</div>
-      <div>{renderLangs(event.languages)}</div>
-      <div>
-        <a href={event.link} target="_blank">
-          LINK
-        </a>
-      </div>
+      <EventInfo>
+        <div
+          onClick={() => {
+            history.push(`events/${event.id}`)
+          }}
+        >
+          {event.name}
+        </div>
+        <div>{event.author}</div>
+        <div>{event.channelName}</div>
+        <div>{event.datetime.toLocaleString()} </div>
+        <div>{event.duration}</div>
+        <EventText value={event.details} disabled />
+        <div>{event.country.native}</div>
+        <div>{event.channelName}</div>
+        <div>{renderLangs(event.languages)}</div>
+        <div>
+          <a href={event.link} target="_blank">
+            LINK
+          </a>
+        </div>
+      </EventInfo>
       <button onClick={onEditEvent}>Edit</button>
       <button
         onClick={() => {

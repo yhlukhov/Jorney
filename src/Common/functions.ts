@@ -1,3 +1,3 @@
-export const random = (i:number) => { //random int between 0 and i (not including i)  
-  return Math.floor(Math.random()*i)
+export const random = (count: number) => {  //random int between 0 and i (not including i)
+  return Math.floor(Math.random() * count)
 }
