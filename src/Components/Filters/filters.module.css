@@ -2,9 +2,8 @@
   width: 280px;
   opacity: 0.7;
   position: absolute;
-  top: 20px;
+  top: 0px;
   right: 240px;
-  transition-duration: 0.2s;
 }
 .filter:hover{
   right:0;

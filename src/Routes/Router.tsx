@@ -15,7 +15,7 @@ const Routes: FC = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route path="/events/:id" component={Event} /> 
+      <Route path="/event/:id" component={Event} /> 
       <Route path="/channels" render={() => <Channels />} />
       <Route path="/channel/:id" render={() => <Channel />} />
       <Route path="/bookmarks" render={() => <Bookmarks />} />

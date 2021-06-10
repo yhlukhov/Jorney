@@ -1,9 +1,19 @@
 @font-face {
   font-family: "Roboto";
   src: local('Roboto'), url('./Roboto-Regular.ttf') format('truetype')
-};
+}
 
 @font-face {
   font-family: "Rurintania";
   src: local('Rurintania'), url('./Rurintania.ttf') format('truetype')
-};
+}
+
+@font-face {
+  font-family: "HangingLetters";
+  src: local('HangingLetters'), url('./HangingLetters.otf') format('truetype')
+}
+
+@font-face {
+  font-family: "Hairline";
+  src: local('Hairline'), url('./Hairline.ttf') format('truetype')
+}

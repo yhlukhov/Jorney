@@ -38,7 +38,7 @@ export default connect(mapStateToProps, {getLocalstorageChannel})(App)
 /// Styled Components ///
 
 const AppSection = styled.section`
-  height: 100vh;
+  min-height: 100vh;
   background-image: url(${ekam});
   background-size: cover;
   background-position: center;

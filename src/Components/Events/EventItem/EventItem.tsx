@@ -24,23 +24,19 @@ const EventItem: FC<TProps> = ({ event, setBookmark, own }) => {
   }, [])
 
   return (
-    <EventDiv style={{ backgroundImage: `url(${img})`}}>
+    <EventDiv>
+      <ImageDiv style={{ backgroundImage: `url(${img})`}} onClick={()=>{history.push(`channel/${event.channelId}`)}} />
       <FavIcon src={event.bookmark ? heartBookmarked : heart} alt="bookmark" onClick={() => setBookmark(event.id)} />
       <EventInfo>
-        <div
+        <Title
           onClick={() => {
-            history.push(`events/${event.id}`)
+            history.push(`/event/${event.id}`)
           }}
         >
           {event.name}
-        </div>
+        </Title>
         <div>{event.author}</div>
-        <div>{event.channelName}</div>
         <div>{event.datetime.toLocaleString()} </div>
-        <div>{event.duration}</div>
-        <EventText value={event.details} disabled />
-        <div>{event.country.native}</div>
-        <div>{event.channelName}</div>
         <div>{renderLangs(event.languages)}</div>
         <div>
           <a href={event.link} target="_blank">
@@ -60,13 +56,37 @@ export const EventDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 250px;
-  height: 350px;
-  margin: 10px;
-  border: 1px solid salmon;
-  border-radius: 8px;
-  background-size: 100% 100%;
+  width: 300px;
+  height: 300px;
+  margin: 25px;
+  border: 1px solid skyblue;
+  border-radius: 5px;
+  background-color: whitesmoke;
   position: relative;
+  box-shadow: 2px 2px 2px #5b8ba852;
+  &:hover {
+    transform: scale(102%);
+  }
+`
+export const ImageDiv = styled.div`
+  position: absolute;
+  top: -40px;
+  left: -40px;
+  width: 100px;
+  height: 100px;
+  border: 1px solid lightskyblue;
+  border-radius: 50%;
+  background-size: 100% 100%;
+  background-color: antiquewhite;
+  &:hover {
+    border-width: 2px;
+  }
+`
+export const EventInfo = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 35px 10px 10px 30px;
+  border-radius: 5px;
 `
 export const FavIcon = styled.img`
   position: absolute;
@@ -74,20 +94,10 @@ export const FavIcon = styled.img`
   right: 3px;
   width: 12%;
 `
-export const EventInfo = styled.div`
-  width: 98%;
-  height: 99%;
-  margin: 2px;
-  padding: 5% 5%;
-  border-radius: 7px;
-  transition-duration: 200ms;
+export const Title = styled.h3`
+  font-weight: bold;
+  padding: 0 0 20px 23px;
   &:hover {
-    background-color: #fff6f1e8;
-    box-shadow: -2px 2px 2px lightgrey;
+    cursor: pointer;
   }
-`
-export const EventText = styled.textarea`
-  background-color: transparent;
-  border-radius: 5px;
-  resize: none;
 `

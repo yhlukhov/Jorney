@@ -66,7 +66,6 @@ const ChannelInfo = styled.div`
   margin: 3px 0 0 2px;
   padding: 5% 5%;
   border-radius: 7px;
-  transition-duration: 200ms;
   &:hover {
     background-color: #fff6f1e8;
     box-shadow: -3px 3px 3px lightgrey;

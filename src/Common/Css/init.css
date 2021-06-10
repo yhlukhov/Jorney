@@ -1,4 +1,11 @@
+* {
+  transition-duration: 200ms;
+}
 body {
   font-family: "Roboto";
   font-size: large;
+}
+h3 {
+  font-family: "Hairline";
+  font-size: x-large;
 }

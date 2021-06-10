@@ -15,9 +15,10 @@ import { countries, international } from "../../Common/Data/Countries"
 import { languages } from "../../Common/Data/Languages"
 import { TCountry } from "../../Common/Types/TCountry"
 import { TLanguage } from "../../Common/Types/TLanguage"
-import { signUp } from '../../Store/authReducer'
+import { signUp } from "../../Store/authReducer"
 import { TState } from "../../Store/store"
 import { connect } from "react-redux"
+import styled from "styled-components"
 
 type TProps = {
   signUp: any
@@ -55,33 +56,17 @@ const useStyles = makeStyles((theme: Theme) =>
         color: "red",
         fontSize: "small",
         opacity: "0",
-        transition: "0.2s",
+        transition: "0.2s", //? do i need it?
       },
       "&:hover:before": {
         visibility: "visible",
         top: "-17px",
         left: "50px",
         opacity: "1",
-        transition: "0.2s",
+        transition: "0.2s", //? do i need it?
       },
     },
   })
-)
-
-const FileField = ({ name }: IFile) => (
-  <Field<FileList> name={name} validate={composeValidators(required, maxImgSize(2000000))}>
-    {({ input: { value, onChange, ...input }, meta }) => (
-      <div>
-        <input
-          {...input}
-          type="file"
-          accept="image/*"
-          onChange={({ target }) => onChange(target.files)} // instead of the default target.value
-        />
-        {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
-      </div>
-    )}
-  </Field>
 )
 
 const RegisterForm: FC<TProps> = ({ signUp, error }) => {
@@ -230,8 +215,38 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
 
 const mapStateToProps = (state: TState) => {
   return {
-    error: state.auth.signUpError
+    error: state.auth.signUpError,
   }
 }
 
-export default connect(mapStateToProps, {signUp})(RegisterForm)
+export default connect(mapStateToProps, { signUp })(RegisterForm)
+
+//* Select File Field component:
+
+const FileField = ({ name }: IFile) => (
+  <Field<FileList> name={name} validate={composeValidators(required, maxImgSize(2000000))}>
+    {({ input: { value, onChange, ...input }, meta }) => (
+      <div>
+        <ImageDiv>
+
+        </ImageDiv>
+        <input
+          {...input}
+          type="file"
+          accept="image/*"
+          onChange={({ target }) => {
+            onChange(target.files)
+          }}
+        />
+        {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
+      </div>
+    )}
+  </Field>
+)
+
+const ImageDiv = styled.div`
+  margin: 10px;
+  width: 325px;
+  height: 325px;
+  border: 1px solid lightsalmon;
+`

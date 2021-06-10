@@ -7,7 +7,7 @@ const Home:FC = () => {
   
   return (
     <div>
-      <div style={{display:'flex'}}>
+      <div style={{display:'flex', margin: "20px 0"}}>
         <Filters />
         <Teachings />
       </div>

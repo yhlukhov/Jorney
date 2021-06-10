@@ -2,10 +2,11 @@ import { FC, useState } from "react"
 import { connect } from "react-redux"
 import history from "../../Common/Utils/history"
 import { TEvent } from "../../Common/Types/TEvent"
-import { EventDiv, EventInfo, EventText, renderLangs } from "../Events/EventItem/EventItem"
+import { EventDiv, EventInfo, renderLangs } from "../Events/EventItem/EventItem"
 import AlertDialog from "../../Common/Components/AlertDialog"
 import { deleteEvent } from "../../Store/eventListReducer"
 import { getChannelEvents } from "../../Store/myChannelReducer"
+import styled from 'styled-components'
 
 type TProps = {
   event: TEvent
@@ -30,7 +31,7 @@ const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents
       <EventInfo>
         <div
           onClick={() => {
-            history.push(`events/${event.id}`)
+            history.push(`/event/${event.id}`)
           }}
         >
           {event.name}
@@ -68,3 +69,10 @@ const MyEvent: FC<TProps> = ({ event, deleteEvent, onEditEvent, getChannelEvents
 }
 
 export default connect(null, { deleteEvent, getChannelEvents })(MyEvent)
+
+
+export const EventText = styled.textarea`
+  background-color: transparent;
+  border-radius: 5px;
+  resize: none;
+`
