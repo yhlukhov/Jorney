@@ -1,10 +1,9 @@
 import {FC} from 'react'
 import { connect } from "react-redux"
 import { Dialog } from "@material-ui/core"
-import CreateEventForm from "./CreateEventForm"
 import EditEventForm from './EditEventForm'
-import { TChannel } from '../../Common/Types/TChannel'
-import { TState } from '../../Store/store'
+import { TChannel } from '../../../Common/Types/TChannel'
+import { TState } from '../../../Store/store'
 
 type TProps = {
   openModal: boolean
@@ -31,4 +30,4 @@ const mapStateToProps = (state:TState) => {
   }
 }
 
-export default connect(mapStateToProps)(EditEventDialog)
+export default connect(mapStateToProps)(EditEventDialog) 

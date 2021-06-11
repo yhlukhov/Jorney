@@ -6,62 +6,55 @@ import "aos/dist/aos.css"
 import { TState } from "../../Store/store"
 import { signOut, getChannelImgUrl } from "../../Store/authReducer"
 import { TChannel } from "../../Common/Types/TChannel"
-import { getChannelEvents, setEventToEdit } from "../../Store/myChannelReducer"
+import { getChannelEvents } from "../../Store/myChannelReducer"
 import { TEvent } from "../../Common/Types/TEvent"
 import { EventsList } from "../Events/Events"
-import MyEvent from "./MyEvent"
 import CreateEventDialog from "./CreateEventDialog"
-import EditEventDialog from "./EditEventDialog"
 import img from "../../Assets/Images/profile.jpg"
 import styled from "styled-components"
+import EventItem from "../Events/EventItem/EventItem"
 
 type TProps = {
   channel: TChannel | undefined
   getChannelEvents: any
   events: Array<TEvent>
+  allEvents: Array<TEvent>
   imgUrl: string | undefined
   getChannelImgUrl: any
-  setEventToEdit: any
   signOut: any
   loggedIn: boolean
 }
 
-const MyChannel: FC<TProps> = ({ channel, getChannelEvents, events, getChannelImgUrl, imgUrl, setEventToEdit, signOut, loggedIn }) => {
+const MyChannel: FC<TProps> = ({ channel, getChannelEvents, events, allEvents, getChannelImgUrl, imgUrl, signOut, loggedIn }) => {
   const [openNewEventModal, setOpenNewEventModal] = useState(false)
-  const [openEditEventModal, setOpenEditEventModal] = useState(false)
+  
   useEffect(() => {
-    //* init
     if (channel) {
       getChannelImgUrl(channel.image)
-      getChannelEvents(channel.id)
     }
     AOS.init({
       duration: 800,
     })
   }, [])
+  useEffect(()=>{
+    if(channel) getChannelEvents(channel.id)
+  }, [allEvents])
 
-  if (!loggedIn) return <Redirect to="login" /> //! use history object instead
+  if (!loggedIn) return <Redirect to="login" />
 
   const onCreateEvent = () => {
     setOpenNewEventModal(true)
   }
-  const onEditEvent = (event: TEvent) => {
-    setOpenEditEventModal(true)
-    setEventToEdit(event)
-  }
+
   const onCloseNewEventModal = () => {
     setOpenNewEventModal(false)
-  }
-  const onCloseEditEventModal = () => {
-    setOpenEditEventModal(false)
-    setEventToEdit(null)
   }
 
   if (!channel) return <div style={{ fontSize: "40px" }}>Loading...</div>
   return (
     <>
       <Banner>
-        <ProfileImg src={imgUrl} alt="avatar" width="200px" />
+        <ProfileImg src={imgUrl || ''} alt="avatar" width="200px" />
       </Banner>
       <div style={{ display: "flex", margin: "10px" }}>
         <div style={{ marginLeft: "10px" }}>
@@ -87,13 +80,12 @@ const MyChannel: FC<TProps> = ({ channel, getChannelEvents, events, getChannelIm
       {events.length ? (
         <EventsList data-aos="fade-up">
           {events.map((event) => {
-            return <MyEvent event={event} onEditEvent={() => onEditEvent(event)} key={event.id} />
+            return <EventItem event={event} own={true} key={event.id} />
           })}
         </EventsList>
       ) : null}
 
       <CreateEventDialog openModal={openNewEventModal} setOpenModal={setOpenNewEventModal} onCloseModal={onCloseNewEventModal} />
-      <EditEventDialog openModal={openEditEventModal} setOpenModal={setOpenEditEventModal} onCloseModal={onCloseEditEventModal} />
     </>
   )
 }
@@ -103,6 +95,7 @@ const mapStateToProps = (state: TState) => {
     loggedIn: state.auth.loggedIn,
     channel: state.auth.channel,
     events: state.myChannel.events,
+    allEvents: state.events.events,
     imgUrl: state.auth.imgUrl,
   }
 }
@@ -110,7 +103,6 @@ const mapStateToProps = (state: TState) => {
 const ActionCreators = {
   getChannelEvents,
   getChannelImgUrl,
-  setEventToEdit,
   signOut,
 }
 

@@ -2,6 +2,7 @@ import { ThunkAction } from "redux-thunk"
 import { InferTActions } from "./store"
 import { TEvent } from '../Common/Types/TEvent'
 import { eventsAPI } from '../API/eventsAPI'
+import { setEventBookmarks } from './helperFunctions'
 
 const SET_CHANNEL_EVENTS = "SET_CHANNEL_EVENTS"
 const SET_EVENT_TO_EDIT = "SET_EVENT_TO_EDIT"
@@ -57,10 +58,14 @@ export const setEventToEdit = (event:TEvent) => {
 export const getChannelEvents = (id:string): ThunkAction<Promise<void>, TState, unknown, TActions> => async dispatch => {
   eventsAPI.loadChannelEvents(id).then(snap => {
     let events = [] as Array<TEvent>
-    snap.forEach(doc => { 
-      let data = doc.data()
-      events.push({ ...data as TEvent, datetime: data.datetime.toDate(), id:doc.id})
+    
+    snap.forEach(event => { 
+      let data = event.data()
+      events.push({ ...data as TEvent, datetime: data.datetime.toDate(), id:event.id})
     })
+    
+    setEventBookmarks(events)
+    
     dispatch(setEvents(events))
   })
 }

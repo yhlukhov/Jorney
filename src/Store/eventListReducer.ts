@@ -4,6 +4,7 @@ import { eventsAPI } from "../API/eventsAPI"
 import { ThunkAction } from "redux-thunk"
 import { TCountry } from "../Common/Types/TCountry"
 import { TLanguage } from "../Common/Types/TLanguage"
+import { setEventBookmarks } from './helperFunctions'
 
 const SET_EVENTS = 'SET_EVENTS'
 const SET_BOOKMARK = 'EVENT_LIST/SET_BOOKMARK'
@@ -73,15 +74,14 @@ const actions = {
 export const loadEvents = (countries: TCountry[], languages: TLanguage[]): ThunkAction<Promise<void>, TState, unknown, TActions> => async (dispatch) => {
   let snapshot = await eventsAPI.loadEvents(countries, languages)
   let events = [] as Array<TEvent>
-  let LS = localStorage.getItem('eventBookmarks')
-  const bookmarks = LS ? JSON.parse(LS) as Array<string> : [] as Array<string>
+  
   snapshot.forEach((event) => {
     const data = event.data()
     events.push({ ...(data as TEvent), datetime: data.datetime.toDate(), id: event.id })
   })
-  bookmarks.length && events.forEach(event => {
-      if (bookmarks.find(bookmark => bookmark === event.id)) event.bookmark = true 
-  })
+  
+  setEventBookmarks(events)
+
   dispatch(actions.setEvents(events))
 }
 

@@ -11,6 +11,7 @@ import EventItem from '../Events/EventItem/EventItem'
 type TProps = {
   channel: TChannel
   events: TEvent[]
+  allEvents: TEvent[]
   imgUrl: undefined | string
   getChannel: any
   getChannelEvents: any
@@ -19,7 +20,7 @@ type TParams = {
   id: string
 }
 
-const ChannelPage: FC<TProps> = ({ channel, events, imgUrl, getChannel, getChannelEvents }) => {
+const ChannelPage: FC<TProps> = ({ channel, events, allEvents, imgUrl, getChannel, getChannelEvents }) => {
   const match = useRouteMatch()
   const { id } = match.params as TParams
 
@@ -29,14 +30,14 @@ const ChannelPage: FC<TProps> = ({ channel, events, imgUrl, getChannel, getChann
 
   useEffect(()=>{
     getChannelEvents(id)
-  },[events])
+  },[allEvents])
 
   if (!channel) return <div>Loading...</div>
 
   return (
     <div>
       <div style={{ display: "flex" }}>
-        <img src={imgUrl} alt="loading..." style={{ height: "400px" }} />
+        <img src={imgUrl || ''} alt="loading..." style={{ height: "400px" }} />
         <div>
           <div>{channel.name}</div>
           <div>{channel.id}</div>
@@ -59,6 +60,7 @@ const mapStateToProps = (state: TState) => {
   return {
     channel: state.channel.channel,
     events: state.channel.events,
+    allEvents: state.events.events,
     imgUrl: state.channel.channelImage,
   }
 }

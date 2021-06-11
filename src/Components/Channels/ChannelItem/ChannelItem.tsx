@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import styled from "styled-components"
 import { TChannel } from "../../../Common/Types/TChannel"
-import { NavLink } from "react-router-dom"
+import history from "../../../Common/Utils/history"
 import heart from "../../../Assets/Images/heart.png"
 import heartBookmarked from "../../../Assets/Images/heart_bookmarked.png"
 import { actions } from "../../../Store/channelListReducer"
@@ -19,7 +19,8 @@ const ChannelItem = ({ channel, setBookmark }: PropsType) => {
     storageAPI.getImageUrl(channel.image).then(setImg)
   }, [])
   return (
-    <ChannelArticle style={{ backgroundImage: `url(${img})` }}>
+    <ChannelDiv>
+      <ChannelImage style={{ backgroundImage: `url(${img})` }} onClick={()=>{history.push(`/channel/${channel.id}`)}} />
       <FavIcon
         src={channel.bookmark ? heartBookmarked : heart}
         alt=""
@@ -28,46 +29,68 @@ const ChannelItem = ({ channel, setBookmark }: PropsType) => {
         }}
       />
       <ChannelInfo>
-        <div>{channel.name}</div>
-        <div>{channel.author}</div>
-        <div>{channel.email}</div>
+        <Title onClick={()=>{history.push(`/channel/${channel.id}`)}}>{channel.name}</Title>
+        <div>Author: {channel.author}</div>
+        <div>Email: {channel.email}</div>
+        <div>Country: {channel.country.native}</div>
+        <div>Language: {channel.languages[0].native}</div>
         <div>{channel.info}</div>
-        <div>{channel.country.native}</div>
-        <div>{channel.languages[0].native}</div>
-        <NavLink to={{ pathname: `/channel/${channel.id}` }}>Open Channel Page</NavLink>
       </ChannelInfo>
-    </ChannelArticle>
+    </ChannelDiv>
   )
 }
 
 export default connect(null, { ...actions })(ChannelItem)
 
-const ChannelArticle = styled.article`
-  width: 300px;
-  min-height: 400px;
-  margin: 10px;
+const ChannelDiv = styled.div`
+  width: 350px;
+  min-height: 350px;
+  margin: 50px 10px 10px;
   border: 1px solid lightcoral;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: whitesmoke;
   background-size: 100% 100%;
   position: relative;
 `
 
+const ChannelImage = styled.div`
+  position: absolute;
+  top: -60px;
+  left: 105px;
+  width: 140px;
+  height: 140px;
+  border: 1px solid lightskyblue;
+  border-radius: 50%;
+  background-size: 100% 100%;
+  background-color: antiquewhite;
+  &:hover {
+    border-width: 2px;
+    cursor: pointer;
+  }
+`
+
+const ChannelInfo = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 90px 20px 10px 20px;
+  border-radius: 8px;
+`
+
 const FavIcon = styled.img`
   position: absolute;
-  top: 3px;
+  top: 5px;
   right: 5px;
+  width: 12%;
 `
-const ChannelInfo = styled.div`
-  width: 98%;
-  height: 60%;
-  margin: 3px 0 0 2px;
-  padding: 5% 5%;
-  border-radius: 7px;
+
+const Title = styled.h3`
+  font-weight: bold;
+  padding-bottom: 25px;
+  text-align: center;
   &:hover {
-    background-color: #fff6f1e8;
-    box-shadow: -3px 3px 3px lightgrey;
+    cursor: pointer;
   }
 `
