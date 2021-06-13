@@ -19,11 +19,12 @@ const Login: FC<TProps> = ({ loggedIn }) => {
     
       <FormDiv>
         <RegDiv>
-          <h1>Sign Up</h1>
+          <h1 style={{textAlign: "center"}}>Sign Up</h1>
           <RegisterForm />
         </RegDiv>
         <LoginDiv>
-          <h1>Sign In</h1>
+        <Or>Or</Or>
+          <h1 style={{textAlign: "center"}}>Sign In</h1> 
           <LoginForm />
         </LoginDiv>
       </FormDiv>
@@ -45,6 +46,7 @@ export default connect(mapStateToProps)(Login)
 const FormDiv = styled.div`
   display: flex;
   justify-content: center;
+  
 `
 
 const RegDiv = styled.div`
@@ -55,8 +57,22 @@ const RegDiv = styled.div`
 `
 
 const LoginDiv = styled.div`
+  position: relative;
   padding: 25px;
   background-image: url(${loginImg});
   background-size: cover;
   box-shadow: 2px 2px 2px #78e6e188;
+`
+
+const Or = styled.div`
+  position: absolute;
+  top: 15px;
+  left: -30px;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  padding-top: 17px;
+  border-radius: 50%;
+  border: 1px solid lightseagreen;
+  background-color:#ffc586e4; 
 `

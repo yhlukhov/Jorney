@@ -7,7 +7,7 @@ import { TLanguage } from "../../../Common/Types/TLanguage"
 import heart from "../../../Assets/Images/heart.png"
 import heartBookmarked from "../../../Assets/Images/heart_bookmarked.png"
 import { setBookmark, deleteEvent } from "../../../Store/eventListReducer"
-import { getChannelEvents, setEventToEdit } from '../../../Store/myChannelReducer'
+import { getChannelEvents, setEventToEdit } from "../../../Store/myChannelReducer"
 import { storageAPI } from "../../../API/storageAPI"
 import AlertDialog from "../../../Common/Components/AlertDialog"
 import EditEventDialog from "./EditEventDialog"
@@ -69,24 +69,25 @@ const EventItem: FC<TProps> = ({ event, setEventToEdit, deleteEvent, getChannelE
         <div>{event.datetime.toLocaleString()} </div>
         <div>{renderLangs(event.languages)}</div>
         <EventText value={event.details} disabled />
-        <div>
-          <a href={event.link} target="_blank">
-            LINK
-          </a>
-        </div>
       </EventInfo>
-      {own && (
-        <ControlsDiv>
-          <button onClick={onEditEvent}>Edit</button>
-          <button
+      <Buttons>
+        <Link>
+          <A href={event.link} target="_blank">
+            Go To Event
+          </A>
+        </Link>
+        {own && <Btn onClick={onEditEvent} style={{backgroundColor:"#9bbeff", borderColor: "cornflowerblue"}}>Edit</Btn>}
+        {own && (
+          <Btn
             onClick={() => {
               setOpenAlert(true)
             }}
+            style={{backgroundColor:"#ff858d"}}
           >
             Delete
-          </button>
-        </ControlsDiv>
-      )}
+          </Btn>
+        )}
+      </Buttons>
       <EditEventDialog openModal={openEditEventModal} setOpenModal={setOpenEditEventModal} onCloseModal={onCloseEditEventModal} />
       <AlertDialog
         open={openAlert}
@@ -98,7 +99,7 @@ const EventItem: FC<TProps> = ({ event, setEventToEdit, deleteEvent, getChannelE
   )
 }
 
-export default connect(null, {setEventToEdit, deleteEvent, getChannelEvents, setBookmark })(EventItem)
+export default connect(null, { setEventToEdit, deleteEvent, getChannelEvents, setBookmark })(EventItem)
 
 //Styled Components
 
@@ -115,7 +116,7 @@ export const EventDiv = styled.div`
   position: relative;
   box-shadow: 2px 2px 2px #5b8ba852;
   &:hover {
-    transform: scale(102%);
+    transform: scale(101.5%);
   }
 `
 export const EventImage = styled.div`
@@ -128,6 +129,7 @@ export const EventImage = styled.div`
   border-radius: 50%;
   background-size: 100% 100%;
   background-color: antiquewhite;
+  transition-duration: 100ms;
   &:hover {
     border-width: 2px;
     cursor: pointer;
@@ -144,17 +146,53 @@ export const FavIcon = styled.img`
   top: 3px;
   right: 3px;
   width: 12%;
+  &:hover {
+    cursor: pointer;
+  }
 `
 export const Title = styled.h3`
   font-weight: bold;
   padding: 0 0 20px 23px;
   &:hover {
     cursor: pointer;
+    text-shadow: 1px 1px 1px #00000055;
   }
 `
 export const EventText = styled.textarea`
+  width: 100%;
   background-color: transparent;
-  border-radius: 5px;
+  border: none;
   resize: none;
 `
-export const ControlsDiv = styled.div``
+const Buttons = styled.div`
+  width: 80%;
+  display: flex;
+  margin-bottom: 10px;
+`
+const Link = styled.div`
+  height: 40px;
+  border: 1px solid lightskyblue;
+  border-radius: 25px;
+  flex-grow: 2;
+`
+const A = styled.a`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #70b5e0;
+  border-radius: 25px;
+  text-decoration: none;
+  transition-duration: 200ms;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+`
+const Btn = styled.button`
+  height: 40px;
+  border: 1px solid lightskyblue;
+  border-radius: 25px;
+  flex-grow: 1;
+`

@@ -36,6 +36,7 @@ const ChannelItem = ({ channel, setBookmark }: PropsType) => {
         <div>Language: {channel.languages[0].native}</div>
         <div>{channel.info}</div>
       </ChannelInfo>
+      <Link onClick={()=>history.push(`/channel/${channel.id}`)}>Go To Channel Page</Link>
     </ChannelDiv>
   )
 }
@@ -46,7 +47,7 @@ const ChannelDiv = styled.div`
   width: 350px;
   min-height: 350px;
   margin: 50px 10px 10px;
-  border: 1px solid lightcoral;
+  border: 1px solid lightskyblue;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -54,6 +55,9 @@ const ChannelDiv = styled.div`
   background-color: whitesmoke;
   background-size: 100% 100%;
   position: relative;
+  &:hover{
+    transform: scale(101%);
+  }
 `
 
 const ChannelImage = styled.div`
@@ -84,6 +88,9 @@ const FavIcon = styled.img`
   top: 5px;
   right: 5px;
   width: 12%;
+  &:hover{
+    cursor: pointer;
+  }
 `
 
 const Title = styled.h3`
@@ -92,5 +99,22 @@ const Title = styled.h3`
   text-align: center;
   &:hover {
     cursor: pointer;
+  }
+`
+
+const Link = styled.div`
+  position: absolute;
+  bottom: 10px;
+  width: 80%;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid lightskyblue;
+  border-radius: 25px;
+  color: #70b5e0;
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
   }
 `

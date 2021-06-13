@@ -7,13 +7,18 @@
   font-family: "Rurintania";
   src: local('Rurintania'), url('./Rurintania.ttf') format('truetype')
 }
-
+/* 
 @font-face {
   font-family: "HangingLetters";
   src: local('HangingLetters'), url('./HangingLetters.otf') format('truetype')
-}
+} */
 
 @font-face {
   font-family: "Hairline";
   src: local('Hairline'), url('./Hairline.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: "Caveat";
+  src: local('Caveat'), url('./Caveat-Regular.ttf') format('truetype')
 }

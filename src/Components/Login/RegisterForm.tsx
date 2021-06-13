@@ -9,6 +9,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 import { composeValidators, required, minLength, maxImgSize } from "../../Common/validators"
 import eyeOpen from "../../Assets/Images/eye_open.png"
 import eyeClose from "../../Assets/Images/eye_close.png"
+import imgFile from "../../Assets/Images/picture.png"
 import { EyeIco, FieldErr } from "../../Common/StyledComponents/index"
 import css from "./form.module.css"
 import { countries, international } from "../../Common/Data/Countries"
@@ -52,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
         content: '"Select country first"',
         width: "fit-content",
         top: "-5px",
-        left: "50px",
+        left: "5px",
         color: "red",
         fontSize: "small",
         opacity: "0",
@@ -60,8 +61,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       "&:hover:before": {
         visibility: "visible",
-        top: "-17px",
-        left: "50px",
+        top: "-12px",
+        left: "5px",
         opacity: "1",
         transition: "0.2s", //? do i need it?
       },
@@ -88,7 +89,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
               return (
                 <div className={css.field}>
                   <label>Channel Name</label>
-                  <input {...input} type="text" />
+                  <Input {...input} type="text" />
                   {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
                 </div>
               )
@@ -98,7 +99,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>Email</label>
-                <input {...input} type="text" />
+                <Input {...input} type="text" />
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
               </div>
             )}
@@ -108,7 +109,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
               <div className={css.field}>
                 <label>Password</label>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <input {...input} type={pwType} />
+                  <Input {...input} type={pwType} />
                   <EyeIco src={pwType === "text" ? eyeClose : eyeOpen} alt="show/hide" onClick={switchPwType} />
                 </div>
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
@@ -119,7 +120,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>Channel Author</label>
-                <input {...input} type="text" />
+                <Input {...input} type="text" />
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
               </div>
             )}
@@ -128,7 +129,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
             {({ input, meta }) => (
               <div className={css.field}>
                 <label>Channel Information</label>
-                <textarea {...input}></textarea>
+                <Textarea {...input}></Textarea>
                 {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
               </div>
             )}
@@ -138,7 +139,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
             {({ input, meta }) => (
               <FormControl variant="filled" className={classes.formControl}>
                 <InputLabel>Select Country</InputLabel>
-                <Select {...input}>
+                <Select {...input} style={selectCss}>
                   {/* @ts-ignore */}
                   <MenuItem value={international}>
                     <span style={{ fontWeight: "bold" }}>{international.name}</span>
@@ -174,6 +175,7 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
                     }, "")
                   }
                   multiple
+                  style={selectCss}
                 >
                   {values.country?.languages.map((langCode) => {
                     const lang = languages.find((language) => language.code === langCode)
@@ -203,9 +205,9 @@ const RegisterForm: FC<TProps> = ({ signUp, error }) => {
               </FormControl>
             )}
           </Field>
-
+          {values.images && <Img src={URL.createObjectURL(values.images[0])} />}
           <FileField name="images" />
-          <button type="submit">Sign Up</button>
+          <SignUp type="submit">Register Channel</SignUp>
           <div>{error.message}</div>
         </form>
       )}
@@ -226,27 +228,76 @@ export default connect(mapStateToProps, { signUp })(RegisterForm)
 const FileField = ({ name }: IFile) => (
   <Field<FileList> name={name} validate={composeValidators(required, maxImgSize(2000000))}>
     {({ input: { value, onChange, ...input }, meta }) => (
-      <div>
-        <ImageDiv>
-
-        </ImageDiv>
+      <FileDiv>
+        <ImgIco src={imgFile} alt="" />
+        <FileText>Select Channel Picture (size:1x1)</FileText>
         <input
           {...input}
           type="file"
           accept="image/*"
+          className={css.fileInput}
           onChange={({ target }) => {
             onChange(target.files)
           }}
         />
         {meta.error && meta.touched && <FieldErr>{meta.error}</FieldErr>}
-      </div>
+      </FileDiv>
     )}
   </Field>
 )
 
-const ImageDiv = styled.div`
-  margin: 10px;
+const Input = styled.input`
+  width: 100%;
+  height: 35px;
+  border: 1px solid lightskyblue;
+  border-radius: 8px;
+`
+const Textarea = styled.textarea`
+  width: 100%;
+  min-height: 70px;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border: 1px solid lightskyblue;
+  border-radius: 8px;
+  resize: vertical;
+  &:focus {
+    outline: none;
+  }
+`
+const Img = styled.img`
+  
   width: 325px;
   height: 325px;
-  border: 1px solid lightsalmon;
+  border: 1px solid lightskyblue;
+  border-radius: 15px;
 `
+const FileDiv = styled.div`
+  position: relative;
+  width: 325px;
+  height: 40px;
+  margin: 10px auto;
+  border: 1px solid lightskyblue;
+  border-radius: 8px;
+  background-color: #ffb38f7a;
+`
+const FileText = styled.div`
+  position: absolute;
+  width: 325px;
+  height: 40px;
+  left: 48px;
+  padding-top: 8px;
+`
+const ImgIco = styled.img`
+  position: absolute;
+  height: 40px;
+`
+const SignUp = styled.button`
+  width: 325px;
+  height: 45px;
+  margin-top: 10px;
+  border: 1px solid lightskyblue;
+  border-radius: 8px;
+  background-color: #ffb38f7a;
+`
+
+const selectCss =  {backgroundColor: "#ffffffb0", width: "105%", marginTop: "5px", marginLeft: "-7px"}
